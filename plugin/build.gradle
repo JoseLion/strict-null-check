@@ -1,0 +1,38 @@
+plugins {
+  id 'groovy'
+  id 'java-gradle-plugin'
+}
+
+repositories {
+  jcenter()
+}
+
+dependencies {
+  testImplementation('org.spockframework:spock-core:1.3-groovy-2.5')
+}
+
+gradlePlugin {
+  plugins {
+    greeting {
+      id = 'com.github.joselion.strict-null-check'
+      implementationClass = 'com.github.joselion.strictnullcheck.StrictNullCheckPlugin'
+    }
+  }
+}
+
+sourceSets {
+  functionalTest {
+  }
+}
+
+gradlePlugin.testSourceSets(sourceSets.functionalTest)
+configurations.functionalTestImplementation.extendsFrom(configurations.testImplementation)
+
+tasks.register('functionalTest', Test) {
+  testClassesDirs = sourceSets.functionalTest.output.classesDirs
+  classpath = sourceSets.functionalTest.runtimeClasspath
+}
+
+tasks.named('check') {
+  dependsOn(tasks.functionalTest)
+}
