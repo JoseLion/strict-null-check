@@ -33,6 +33,6 @@ tasks.register('functionalTest', Test) {
   classpath = sourceSets.functionalTest.runtimeClasspath
 }
 
-tasks.named('check') {
+tasks.named('test') {
   dependsOn(tasks.functionalTest)
 }
