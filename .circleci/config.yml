@@ -1,0 +1,13 @@
+version: 2.1
+
+orbs:
+  gradle: circleci/gradle@2.2.0
+
+workflows:
+  build:
+    jobs:
+      - gradle/test:
+          executor:
+            name: gradle/default
+            tag: '15.0.1'
+          test_command: build
