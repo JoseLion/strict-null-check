@@ -1,14 +1,42 @@
 package com.github.joselion.strictnullcheck
 
+import groovy.io.FileType
+import groovy.text.SimpleTemplateEngine
+
+import java.util.List
+
+import org.gradle.api.artifacts.Configuration
 import org.gradle.api.Project
 import org.gradle.api.Plugin
 
 class StrictNullCheckPlugin implements Plugin<Project> {
   void apply(Project project) {
-    project.tasks.register("greeting") {
-      doLast {
-        println("Hello from plugin 'com.github.joselion.strict-null-check'")
-      }
+    if (project.plugins.findPlugin('java') == null) {
+      throw new UnsupportedOperationException("The 'java' plugin is required to use this plugin!")
     }
+
+    def ext = project.extensions.create(
+      'strictNullCheck',
+      StrictNullCheckExtension,
+      List.of('com.github.joselion.strictnullcheck.StrictNullPackage'),
+      "$project.buildDir/generated".toString(),
+      '3.0.2'
+    )
+
+    Configuration configuration = project.getConfigurations().getByName('compileOnly')
+    configuration.getDependencies().add(
+      project.getDependencies().create("com.google.code.findbugs:jsr305:$ext.findbugsVersion")
+    )
+
+    project.sourceSets.main.java.srcDirs(ext.generatedDir, 'plugin/src/main/java')
+
+    project.tasks.create(
+      'generatePackageInfo',
+      GeneratePackageInfoTask,
+      ext.generatedDir,
+      ext.annotations
+    )
+
+    project.tasks.classes.finalizedBy(project.tasks.generatePackageInfo)
   }
 }
