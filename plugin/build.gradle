@@ -20,19 +20,9 @@ gradlePlugin {
   }
 }
 
-sourceSets {
-  functionalTest {
+test {
+  testLogging {
+    showStandardStreams = true
+    events('passed', 'skipped', 'failed')
   }
-}
-
-gradlePlugin.testSourceSets(sourceSets.functionalTest)
-configurations.functionalTestImplementation.extendsFrom(configurations.testImplementation)
-
-tasks.register('functionalTest', Test) {
-  testClassesDirs = sourceSets.functionalTest.output.classesDirs
-  classpath = sourceSets.functionalTest.runtimeClasspath
-}
-
-tasks.named('test') {
-  dependsOn(tasks.functionalTest)
 }
