@@ -1,7 +1,15 @@
 plugins {
   id 'groovy'
   id 'java-gradle-plugin'
+
+  id 'com.gradle.plugin-publish' version '0.12.0'
 }
+
+version = '0.0.1'
+group = 'com.github.joselion'
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
   jcenter()
@@ -13,9 +21,22 @@ dependencies {
 
 gradlePlugin {
   plugins {
-    greeting {
+    strictNullCheck {
       id = 'com.github.joselion.strict-null-check'
       implementationClass = 'com.github.joselion.strictnullcheck.StrictNullCheckPlugin'
+    }
+  }
+}
+
+pluginBundle {
+  website = 'https://github.com/JoseLion/strict-null-check'
+  vcsUrl = 'https://github.com/JoseLion/strict-null-check.git'
+  description = 'A Gradle plugin to add full Strict Null Check to your Java code'
+  tags = ['nullability', 'strict-null', 'nonnull', 'null-check']
+
+  plugins {
+    strictNullCheck {
+      displayName = 'Strict Null Check Plugin'
     }
   }
 }
