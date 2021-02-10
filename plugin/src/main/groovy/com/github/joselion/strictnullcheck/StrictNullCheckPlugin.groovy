@@ -11,10 +11,6 @@ import org.gradle.api.Plugin
 
 class StrictNullCheckPlugin implements Plugin<Project> {
   void apply(Project project) {
-    if (project.plugins.findPlugin('java') == null) {
-      throw new UnsupportedOperationException("The 'java' plugin is required to use this plugin!")
-    }
-
     def ext = project.extensions.create(
       'strictNullCheck',
       StrictNullCheckExtension,
