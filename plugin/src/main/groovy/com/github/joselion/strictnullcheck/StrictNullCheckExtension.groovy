@@ -2,21 +2,19 @@ package com.github.joselion.strictnullcheck
 
 import java.util.List
 
+import org.gradle.api.Project
+
 public class StrictNullCheckExtension {
 
-  List<String> annotations
+  private Project project
 
-  String generatedDir
+  List<String> annotations = List.of('com.github.joselion.strictnullcheck.StrictNullPackage')
 
-  String findbugsVersion
+  String generatedDir = "$project.buildDir/generated".toString()
 
-  public StrictNullCheckExtension(
-    List<String> annotations,
-    String generatedDir,
-    String findbugsVersion
-  ) {
-    this.annotations = annotations
-    this.generatedDir = generatedDir
-    this.findbugsVersion = findbugsVersion
+  String findbugsVersion = '3.0.2'
+
+  public StrictNullCheckExtension(Project project) {
+    this.project = project
   }
 }
