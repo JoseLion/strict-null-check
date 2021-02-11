@@ -14,13 +14,7 @@ class StrictNullCheckPlugin implements Plugin<Project> {
 
   @Override
   void apply(Project project) {
-    def ext = project.extensions.create(
-      'strictNullCheck',
-      StrictNullCheckExtension,
-      List.of('com.github.joselion.strictnullcheck.StrictNullPackage'),
-      "$project.buildDir/generated".toString(),
-      '3.0.2'
-    )
+    def ext = project.extensions.create('strictNullCheck', StrictNullCheckExtension, project)
 
     project.plugins.withType(JavaPlugin) {
       Configuration configuration = project.getConfigurations().getByName('compileOnly')
