@@ -4,7 +4,7 @@ import spock.lang.Specification
 
 import org.gradle.testfixtures.ProjectBuilder
 
-public class GeneratePackageInfoTaskTest extends Specification {
+class GeneratePackageInfoTaskTest extends Specification {
 
   def 'getPackageInfoTemplate test'() {
     given:
