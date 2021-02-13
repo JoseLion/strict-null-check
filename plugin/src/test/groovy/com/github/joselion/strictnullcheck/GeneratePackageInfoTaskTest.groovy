@@ -8,15 +8,16 @@ class GeneratePackageInfoTaskTest extends Specification {
 
   def 'getPackageInfoTemplate test'() {
     given:
-      def annotations = [
+      def project = ProjectBuilder.builder().build()
+      def extension = new StrictNullCheckExtension(project)
+      extension.annotations = [
         'org.springframework.lang.NonNullApi',
         'org.springframework.lang.NonNullFields'
       ]
-      def task = ProjectBuilder.builder().build().tasks.create(
+      def task = project.tasks.create(
         'generatePackageInfo',
         GeneratePackageInfoTask,
-        'generated/',
-        annotations
+        extension
       )
 
     when:

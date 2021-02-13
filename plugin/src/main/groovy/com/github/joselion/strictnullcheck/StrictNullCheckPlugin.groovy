@@ -14,21 +14,20 @@ class StrictNullCheckPlugin implements Plugin<Project> {
 
   @Override
   void apply(Project project) {
-    def ext = project.extensions.create('strictNullCheck', StrictNullCheckExtension, project)
+    def extension = project.extensions.create('strictNullCheck', StrictNullCheckExtension, project)
 
     project.plugins.withType(JavaPlugin) {
       Configuration configuration = project.getConfigurations().getByName('compileOnly')
       configuration.getDependencies().add(
-        project.getDependencies().create("com.google.code.findbugs:jsr305:$ext.findbugsVersion")
+        project.getDependencies().create("com.google.code.findbugs:jsr305:${extension.findbugsVersion}")
       )
 
-      project.sourceSets.main.java.srcDirs(ext.generatedDir, 'plugin/src/main/java')
+      project.sourceSets.main.java.srcDirs(extension.generatedDir, 'plugin/src/main/java')
 
       project.tasks.create(
         'generatePackageInfo',
         GeneratePackageInfoTask,
-        ext.generatedDir,
-        ext.annotations
+        extension
       )
 
       project.tasks.classes.finalizedBy(project.tasks.generatePackageInfo)
