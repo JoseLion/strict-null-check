@@ -17,6 +17,8 @@ class StrictNullCheckPlugin implements Plugin<Project> {
         project.getDependencies().create("com.google.code.findbugs:jsr305:${extension.findbugsVersion}")
       )
 
+      project.sourceSets.main.java.srcDirs(extension.generatedDir)
+
       project.tasks.create(
         'generatePackageInfo',
         GeneratePackageInfoTask,
