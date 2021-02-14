@@ -1,10 +1,5 @@
 package com.github.joselion.strictnullcheck
 
-import groovy.io.FileType
-import groovy.text.SimpleTemplateEngine
-
-import java.util.List
-
 import org.gradle.api.Project
 import org.gradle.api.Plugin
 import org.gradle.api.artifacts.Configuration
@@ -21,8 +16,6 @@ class StrictNullCheckPlugin implements Plugin<Project> {
       configuration.getDependencies().add(
         project.getDependencies().create("com.google.code.findbugs:jsr305:${extension.findbugsVersion}")
       )
-
-      project.sourceSets.main.java.srcDirs(extension.generatedDir, 'plugin/src/main/java')
 
       project.tasks.create(
         'generatePackageInfo',

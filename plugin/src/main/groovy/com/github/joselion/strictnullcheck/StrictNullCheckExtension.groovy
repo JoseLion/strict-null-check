@@ -8,7 +8,7 @@ public class StrictNullCheckExtension {
 
   private Project project
 
-  List<String> annotations = List.of('com.github.joselion.strictnullcheck.StrictNullPackage')
+  List<String> annotations = []
 
   String generatedDir = "$project.buildDir/generated".toString()
 

@@ -2,11 +2,9 @@ package com.github.joselion.strictnullcheck
 
 import groovy.io.FileType
 
-import java.util.List
 import javax.inject.Inject
 
 import org.gradle.api.DefaultTask
-import org.gradle.api.Project
 import org.gradle.api.tasks.TaskAction
 
 public class GeneratePackageInfoTask extends DefaultTask {
