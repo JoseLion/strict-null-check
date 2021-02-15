@@ -78,4 +78,43 @@ class StrictNullCheckPluginE2E extends Specification {
       then:
         result.output.contains("ANNOTATIONS: [my.custom.annotation.NullApi, my.custom.annotation.NullFields]")
   }
+
+  def 'can call useSpring to set Spring annotations'() {
+    given:
+      def projectDir = new File("build/e2e")
+      projectDir.mkdirs()
+      new File(projectDir, "settings.gradle") << ""
+      def buildGradle = new File(projectDir, "build.gradle")
+      buildGradle.bytes = []
+      buildGradle << """\
+        |plugins {
+        |  id('java')
+        |  id('com.github.joselion.strict-null-check')
+        |}
+
+        |repositories {
+        |  jcenter()
+        |}
+
+        |strictNullCheck {
+        |  useSpring()
+        |}
+
+        |task showAnnotations() {
+        |  println('ANNOTATIONS: ' + strictNullCheck.annotations)
+        |}
+      |"""
+      .stripMargin()
+
+      when:
+        def runner = GradleRunner.create()
+        runner.forwardOutput()
+        runner.withPluginClasspath()
+        runner.withArguments("showAnnotations")
+        runner.withProjectDir(projectDir)
+        def result = runner.build()
+
+      then:
+        result.output.contains("ANNOTATIONS: [org.springframework.lang.NonNullApi, org.springframework.lang.NonNullFields]")
+  }
 }
