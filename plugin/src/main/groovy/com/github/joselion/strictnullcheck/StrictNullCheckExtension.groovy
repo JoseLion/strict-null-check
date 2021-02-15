@@ -17,4 +17,11 @@ public class StrictNullCheckExtension {
   public StrictNullCheckExtension(Project project) {
     this.project = project
   }
+
+  public void useSpring() {
+    this.annotations = [
+      'org.springframework.lang.NonNullApi',
+      'org.springframework.lang.NonNullFields'
+    ]
+  }
 }
