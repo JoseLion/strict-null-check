@@ -4,9 +4,10 @@ on: pull_request
 
 jobs:
   approve:
+    if: github.event.review.state == 'approved'
     runs-on: ubuntu-latest
-    if: github.actor == github.repository_owner && github.event.review.state != 'approved'
     steps:
       - uses: hmarr/auto-approve-action@v2.0.0
+        if: github.actor == github.repository_owner
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
