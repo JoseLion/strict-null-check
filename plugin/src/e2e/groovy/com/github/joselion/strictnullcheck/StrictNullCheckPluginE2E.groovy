@@ -25,16 +25,16 @@ class StrictNullCheckPluginE2E extends Specification {
       |"""
       .stripMargin()
 
-      when:
-        def runner = GradleRunner.create()
-        runner.forwardOutput()
-        runner.withPluginClasspath()
-        runner.withArguments("classes")
-        runner.withProjectDir(projectDir)
-        def result = runner.build()
+    when:
+      def runner = GradleRunner.create()
+      runner.forwardOutput()
+      runner.withPluginClasspath()
+      runner.withArguments("classes")
+      runner.withProjectDir(projectDir)
+      def result = runner.build()
 
-      then:
-        result.output.contains("BUILD SUCCESSFUL")
+    then:
+      result.output.contains("BUILD SUCCESSFUL")
   }
 
   def "can configure the plugin extension"() {
@@ -67,16 +67,16 @@ class StrictNullCheckPluginE2E extends Specification {
       |"""
       .stripMargin()
 
-      when:
-        def runner = GradleRunner.create()
-        runner.forwardOutput()
-        runner.withPluginClasspath()
-        runner.withArguments("showAnnotations")
-        runner.withProjectDir(projectDir)
-        def result = runner.build()
+    when:
+      def runner = GradleRunner.create()
+      runner.forwardOutput()
+      runner.withPluginClasspath()
+      runner.withArguments("showAnnotations")
+      runner.withProjectDir(projectDir)
+      def result = runner.build()
 
-      then:
-        result.output.contains("ANNOTATIONS: [my.custom.annotation.NullApi, my.custom.annotation.NullFields]")
+    then:
+      result.output.contains("ANNOTATIONS: [my.custom.annotation.NullApi, my.custom.annotation.NullFields]")
   }
 
   def 'can call useSpring to set Spring annotations'() {
@@ -106,15 +106,15 @@ class StrictNullCheckPluginE2E extends Specification {
       |"""
       .stripMargin()
 
-      when:
-        def runner = GradleRunner.create()
-        runner.forwardOutput()
-        runner.withPluginClasspath()
-        runner.withArguments("showAnnotations")
-        runner.withProjectDir(projectDir)
-        def result = runner.build()
+    when:
+      def runner = GradleRunner.create()
+      runner.forwardOutput()
+      runner.withPluginClasspath()
+      runner.withArguments("showAnnotations")
+      runner.withProjectDir(projectDir)
+      def result = runner.build()
 
-      then:
-        result.output.contains("ANNOTATIONS: [org.springframework.lang.NonNullApi, org.springframework.lang.NonNullFields]")
+    then:
+      result.output.contains("ANNOTATIONS: [org.springframework.lang.NonNullApi, org.springframework.lang.NonNullFields]")
   }
 }

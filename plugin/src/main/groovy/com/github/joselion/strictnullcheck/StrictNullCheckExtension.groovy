@@ -8,11 +8,11 @@ public class StrictNullCheckExtension {
 
   private Project project
 
-  List<String> annotations = []
+  List<String> annotations = ['org.eclipse.jdt.annotation.NonNullByDefault']
 
   String generatedDir = "$project.buildDir/generated".toString()
 
-  String findbugsVersion = '3.0.2'
+  Versions versions = new Versions()
 
   public StrictNullCheckExtension(Project project) {
     this.project = project
@@ -23,5 +23,12 @@ public class StrictNullCheckExtension {
       'org.springframework.lang.NonNullApi',
       'org.springframework.lang.NonNullFields'
     ]
+  }
+
+  public static class Versions {
+
+    String eclipseAnnotations = '2.2.600'
+
+    String findBugs = '3.0.2'
   }
 }

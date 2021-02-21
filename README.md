@@ -51,19 +51,24 @@ apply plugin: 'com.github.joselion.strict-null-check'
 The default extension configuration looks like this:
 ```gradle
 strictNullCheck {
-  annotations = []
-  findbugsVersion = '3.0.2'
+  annotations = ['org.eclipse.jdt.annotation.NonNullByDefault']
   generatedDir = "$buildDir/generated"
+  versions {
+    eclipseAnnotations = '2.2.600'
+    findBugs = '3.0.2'
+  }
 }
 ```
 
 ### Extension properties
-| Property        | Default                 | Description |
-| --------------- | :---------------------: | ----------- |
-| annotation      | `[]`                    | List of fully qualified class names of the annotations to add to all generated `package-info.java` files |
-| findbugsVersion | `'3.0.2'`               | The Findbugs version to use. Check [MVNRepo][1] for more version |
-| generatedDir    | `"$buildDir/generated"` | The directory where the `package-info.java` files should be generated |
-| useSpring       | `-`                     | A shortcut function to use Spring's null-safety annotation |
+| Property                    | Default                                           | Description |
+| --------------------------- | :-----------------------------------------------: | ----------- |
+| annotation                  | `['org.eclipse.jdt.annotation.NonNullByDefault']` | List of fully qualified class names of the annotations to add to all the generated `package-info.java` files |
+| generatedDir                | `"$buildDir/generated"`                           | The directory where the `package-info.java` files should be generated |
+| versions                    | -                                                 | A closure to configure the versions of the dependencies added |
+| versions.findBugs           | `'3.0.2'`                                         | The `FindBugs JSR305` version to use. Check the [MVNRepo][1] for more versions |
+| versions.eclipseAnnotations | `'2.2.600'`                                       | The `JDT Annotations` version to use. Check the [MVNRepo][2] for more versions |
+| useSpring                   | -                                                 | A shortcut function to use Spring's null-safety annotation |
 
 ### The `useSpring()` shortcut
 This function can be called inside the `strictNullCheck` closure as a shortcut to set Spring's null-safety annotations in the extension configuration. That is, setting:
@@ -93,3 +98,4 @@ Contributions are very welcome! To do so, please fork this repository and open a
 [Apache License 2.0](LICENSE)
 
 [1]: https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305
+[2]: https://mvnrepository.com/artifact/org.eclipse.jdt/org.eclipse.jdt.annotation

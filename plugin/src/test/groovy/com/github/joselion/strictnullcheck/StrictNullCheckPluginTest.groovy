@@ -15,9 +15,10 @@ class StrictNullCheckPluginTest extends Specification {
     then:
       def ext = project.extensions.findByName('strictNullCheck')
       ext != null
-      ext.annotations == []
+      ext.annotations == ['org.eclipse.jdt.annotation.NonNullByDefault']
       ext.generatedDir == "$project.buildDir/generated"
-      ext.findbugsVersion == '3.0.2'
+      ext.versions.findBugs == '3.0.2'
+      ext.versions.eclipseAnnotations == '2.2.600'
   }
 
 
