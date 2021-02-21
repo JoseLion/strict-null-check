@@ -40,7 +40,7 @@ public class GeneratePackageInfoTask extends DefaultTask {
     outputFile << templateOutput
   }
 
-  def String getPackageJavadoc() {
+  def String buildPackageJavadoc() {
     def annotationList = extension.annotations.collect({ ' * - ' + it }).join('\n')
     def javadoc = extension.packageJavadoc != null
       ? '\n| * \n|' + extension.packageJavadoc.split('\n').collect({ ' * ' + it }).join('\n')
@@ -56,7 +56,7 @@ public class GeneratePackageInfoTask extends DefaultTask {
 
   def String getPackageInfoTemplate(packageName) {
     return """\
-      |${this.getPackageJavadoc()}
+      |${buildPackageJavadoc()}
       |${extension.annotations.collect({ cannonicalToAnnotation(it) }).join('\n')}
       |package $packageName;
 

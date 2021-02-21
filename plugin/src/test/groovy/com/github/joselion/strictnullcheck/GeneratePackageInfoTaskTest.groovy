@@ -40,7 +40,7 @@ class GeneratePackageInfoTaskTest extends Specification {
       .stripMargin()
   }
 
-  def 'getPackageJavadoc without extension.packageJavadoc'() {
+  def 'buildPackageJavadoc without extension.packageJavadoc'() {
     given:
       def project = ProjectBuilder.builder().build()
       def extension = new StrictNullCheckExtension(project)
@@ -51,7 +51,7 @@ class GeneratePackageInfoTaskTest extends Specification {
       )
 
     when:
-      def packageJavadoc = task.getPackageJavadoc()
+      def packageJavadoc = task.buildPackageJavadoc()
 
     then:
       packageJavadoc == """\
@@ -62,7 +62,7 @@ class GeneratePackageInfoTaskTest extends Specification {
       .stripMargin()
   }
 
-  def 'getPackageJavadoc with extension.packageJavadoc'() {
+  def 'buildPackageJavadoc with extension.packageJavadoc'() {
     given:
       def project = ProjectBuilder.builder().build()
       def extension = new StrictNullCheckExtension(project)
@@ -77,7 +77,7 @@ class GeneratePackageInfoTaskTest extends Specification {
       )
 
     when:
-      def packageJavadoc = task.getPackageJavadoc()
+      def packageJavadoc = task.buildPackageJavadoc()
 
     then:
       packageJavadoc == """\
