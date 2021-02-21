@@ -55,6 +55,6 @@ tasks.register('e2e', Test) {
   classpath = sourceSets.e2e.runtimeClasspath
 }
 
-tasks.named('test') {
-  finalizedBy(tasks.e2e)
+tasks.named('check') {
+  dependsOn(tasks.e2e)
 }

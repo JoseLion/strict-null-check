@@ -4,6 +4,28 @@ orbs:
   gradle: circleci/gradle@2.2.0
 
 jobs:
+  build:
+    executor:
+      name: gradle/default
+      tag: '15.0.1'
+
+    steps:
+      - checkout
+
+      - gradle/with_cache:
+          steps:
+            - run:
+                name: Test
+                command: ./gradlew test
+
+            - run:
+                name: End-to-end
+                command: ./gradlew e2e
+
+            - run:
+                name: Build
+                command: ./gradlew build
+
   publish:
     executor:
       name: gradle/default
@@ -25,15 +47,11 @@ jobs:
 workflows:
   main:
     jobs:
-      - gradle/test:
-          executor:
-            name: gradle/default
-            tag: '15.0.1'
-          test_command: build
+      - build
 
       - publish:
           requires:
-            - gradle/test
+            - build
           filters:
             branches:
               only: release
