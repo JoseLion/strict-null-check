@@ -40,8 +40,23 @@ public class GeneratePackageInfoTask extends DefaultTask {
     outputFile << templateOutput
   }
 
+  def String getPackageJavadoc() {
+    def annotationList = extension.annotations.collect({ ' * - ' + it }).join('\n')
+    def javadoc = extension.packageJavadoc != null
+      ? '\n| * \n|' + extension.packageJavadoc.split('\n').collect({ ' * ' + it }).join('\n')
+      : ''
+
+    return """\
+      |/**
+      | * This package is checked for {@code null} by the following annotations:
+      |$annotationList$javadoc
+      | */"""
+    .stripMargin()
+  }
+
   def String getPackageInfoTemplate(packageName) {
     return """\
+      |${this.getPackageJavadoc()}
       |${extension.annotations.collect({ cannonicalToAnnotation(it) }).join('\n')}
       |package $packageName;
 
