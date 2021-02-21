@@ -12,6 +12,8 @@ public class StrictNullCheckExtension {
 
   String generatedDir = "$project.buildDir/generated".toString()
 
+  String packageJavadoc = null
+
   Versions versions = new Versions()
 
   public StrictNullCheckExtension(Project project) {
