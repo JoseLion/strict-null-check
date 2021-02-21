@@ -13,9 +13,10 @@ class StrictNullCheckPlugin implements Plugin<Project> {
 
     project.plugins.withType(JavaPlugin) {
       Configuration configuration = project.getConfigurations().getByName('compileOnly')
-      configuration.getDependencies().add(
-        project.getDependencies().create("com.google.code.findbugs:jsr305:${extension.findbugsVersion}")
-      )
+      configuration.getDependencies().addAll([
+        project.getDependencies().create("com.google.code.findbugs:jsr305:${extension.versions.findBugs}"),
+        project.getDependencies().create("org.eclipse.jdt:org.eclipse.jdt.annotation:${extension.versions.eclipseAnnotations}")
+      ])
 
       project.sourceSets.main.java.srcDirs(extension.generatedDir)
 
