@@ -47,6 +47,10 @@ buildscript {
 apply plugin: 'com.github.joselion.strict-null-check'
 ```
 
+With the plugin applied, run `./gradlew classes` and the `package-info.java` filetree will be generated. And that's it! But remember, whenever a new package is created you'll need to run the `classes` task again.
+
+**Note**: Runnig `./gradlew build` will also do the trick since the `build` task depends on the `compileJava` task, which depends on the `classes` task.
+
 ## Extension
 The default extension configuration looks like this:
 ```gradle
@@ -65,6 +69,7 @@ strictNullCheck {
 | --------------------------- | :-----------------------------------------------: | ----------- |
 | annotation                  | `['org.eclipse.jdt.annotation.NonNullByDefault']` | List of fully qualified class names of the annotations to add to all the generated `package-info.java` files |
 | generatedDir                | `"$buildDir/generated"`                           | The directory where the `package-info.java` files should be generated |
+| packageJavadoc              | -                                                 | A single or multi-line string to add to the javadoc of the generated `package-info.java` files |
 | versions                    | -                                                 | A closure to configure the versions of the dependencies added |
 | versions.findBugs           | `'3.0.2'`                                         | The `FindBugs JSR305` version to use. Check the [MVNRepo][1] for more versions |
 | versions.eclipseAnnotations | `'2.2.600'`                                       | The `JDT Annotations` version to use. Check the [MVNRepo][2] for more versions |
@@ -87,6 +92,9 @@ strictNullCheck {
   ]
 }
 ```
+
+### Tasks
+The plugin adds a task named `generatePackageInfo`. So if you want, you could also run `./gradlew generatePackageInfo` instead of running the `classes` task.
 
 ## Something's missing?
 Please create an [issue](https://github.com/JoseLion/strict-null-check/issues/new) describing your request, feature, or bug. I'll try to look into it as soon as possible 🙂
