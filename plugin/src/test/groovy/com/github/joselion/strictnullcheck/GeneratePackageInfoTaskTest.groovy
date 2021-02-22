@@ -27,8 +27,10 @@ class GeneratePackageInfoTaskTest extends Specification {
       template == """\
         |/**
         | * This package is checked for {@code null} by the following annotations:
-        | * - org.springframework.lang.NonNullApi
-        | * - org.springframework.lang.NonNullFields
+        | * <ul>
+        | *   <li>org.springframework.lang.NonNullApi</li>
+        | *   <li>org.springframework.lang.NonNullFields</li>
+        | * </ul>
         | */
         |@NonNullApi
         |@NonNullFields
@@ -57,7 +59,9 @@ class GeneratePackageInfoTaskTest extends Specification {
       packageJavadoc == """\
         |/**
         | * This package is checked for {@code null} by the following annotations:
-        | * - org.eclipse.jdt.annotation.NonNullByDefault
+        | * <ul>
+        | *   <li>org.eclipse.jdt.annotation.NonNullByDefault</li>
+        | * </ul>
         | */"""
       .stripMargin()
   }
@@ -83,7 +87,9 @@ class GeneratePackageInfoTaskTest extends Specification {
       packageJavadoc == """\
         |/**
         | * This package is checked for {@code null} by the following annotations:
-        | * - org.eclipse.jdt.annotation.NonNullByDefault
+        | * <ul>
+        | *   <li>org.eclipse.jdt.annotation.NonNullByDefault</li>
+        | * </ul>
         | * 
         | * @author JoseLion
         | * @since v1.1.0

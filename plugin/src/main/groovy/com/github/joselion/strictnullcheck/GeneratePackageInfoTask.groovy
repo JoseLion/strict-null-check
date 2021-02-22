@@ -41,15 +41,17 @@ public class GeneratePackageInfoTask extends DefaultTask {
   }
 
   def String buildPackageJavadoc() {
-    def annotationList = extension.annotations.collect({ ' * - ' + it }).join('\n')
+    def annotationList = extension.annotations.collect({ " *   <li>$it</li>" }).join('\n')
     def javadoc = extension.packageJavadoc != null
-      ? '\n| * \n|' + extension.packageJavadoc.split('\n').collect({ ' * ' + it }).join('\n')
+      ? '\n| * \n|' + extension.packageJavadoc.split('\n').collect({ " * $it" }).join('\n')
       : ''
 
     return """\
       |/**
       | * This package is checked for {@code null} by the following annotations:
-      |$annotationList$javadoc
+      | * <ul>
+      |$annotationList
+      | * </ul>$javadoc
       | */"""
     .stripMargin()
   }
