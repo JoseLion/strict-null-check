@@ -2,9 +2,15 @@ package com.github.joselion.strictnullcheck
 
 import groovy.io.FileType
 
+import java.util.List
+import java.util.Set
+
 import javax.inject.Inject
 
 import org.gradle.api.DefaultTask
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.InputFiles
+import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 
 public class GeneratePackageInfoTask extends DefaultTask {
@@ -17,8 +23,23 @@ public class GeneratePackageInfoTask extends DefaultTask {
     this.extension = extension
   }
 
-  @TaskAction
-  def void generatePackageInfo() {
+  @Input
+  def String getGeneratedDirPath() {
+    return this.extension.generatedDir
+  }
+
+  @Input
+  def List<String> getAnnotations() {
+    return this.extension.annotations
+  }
+
+  @Input
+  def String getPackageJavadoc() {
+    return this.extension.packageJavadoc ?: ''
+  }
+
+  @InputFiles
+  def Set<File> getSourcePackages() {
     def packages = [] as Set
 
     new File(".").eachFileRecurse(FileType.FILES) {
@@ -27,12 +48,23 @@ public class GeneratePackageInfoTask extends DefaultTask {
       }
     }
 
-    packages.each { buildPackageInfo(it) }
+    return packages
+  }
+
+  @OutputDirectory
+  def File getGeneratedDir() {
+    return new File(getGeneratedDirPath())
+  }
+
+  @TaskAction
+  def void generatePackageInfo() {
+    getSourcePackages().each { buildPackageInfo(it) }
   }
 
   def void buildPackageInfo(package) {
-    def dotToSlash = package.replaceAll('\\.', '/')
-    def dir = this.project.mkdir("${extension.generatedDir}/${dotToSlash}")
+    String basePath = getGeneratedDir().path
+    String dottedPath = package.replaceAll('\\.', '/')
+    File dir = this.project.mkdir("${basePath}/${dottedPath}")
     File outputFile = new File(dir.absolutePath, 'package-info.java')
     String templateOutput = getPackageInfoTemplate(package)
 
@@ -41,9 +73,9 @@ public class GeneratePackageInfoTask extends DefaultTask {
   }
 
   def String buildPackageJavadoc() {
-    def annotationList = extension.annotations.collect({ " *   <li>$it</li>" }).join('\n')
-    def javadoc = extension.packageJavadoc != null
-      ? '\n| * \n|' + extension.packageJavadoc.split('\n').collect({ " * $it" }).join('\n')
+    def annotationList = getAnnotations().collect({ " *   <li>$it</li>" }).join('\n')
+    def javadoc = !getPackageJavadoc().isEmpty()
+      ? '\n| * \n|' + getPackageJavadoc().split('\n').collect({ " * $it" }).join('\n')
       : ''
 
     return """\
@@ -59,10 +91,10 @@ public class GeneratePackageInfoTask extends DefaultTask {
   def String getPackageInfoTemplate(packageName) {
     return """\
       |${buildPackageJavadoc()}
-      |${extension.annotations.collect({ cannonicalToAnnotation(it) }).join('\n')}
+      |${getAnnotations().collect({ cannonicalToAnnotation(it) }).join('\n')}
       |package $packageName;
 
-      |${extension.annotations.collect({ cannonicalToImport(it) }).join('\n')}
+      |${getAnnotations().collect({ cannonicalToImport(it) }).join('\n')}
     |"""
     .stripMargin()
   }
