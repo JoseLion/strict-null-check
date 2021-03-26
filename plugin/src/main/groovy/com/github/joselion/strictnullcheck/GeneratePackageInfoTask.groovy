@@ -2,13 +2,19 @@ package com.github.joselion.strictnullcheck
 
 import groovy.io.FileType
 
+import java.util.Set
+
 import javax.inject.Inject
 
 import org.gradle.api.DefaultTask
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.InputFiles
+import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 
 public class GeneratePackageInfoTask extends DefaultTask {
 
+  @Input
   private StrictNullCheckExtension extension
 
   @Inject
@@ -17,8 +23,8 @@ public class GeneratePackageInfoTask extends DefaultTask {
     this.extension = extension
   }
 
-  @TaskAction
-  def void generatePackageInfo() {
+  @InputFiles
+  def Set<File> getSourcePackages() {
     def packages = [] as Set
 
     new File(".").eachFileRecurse(FileType.FILES) {
@@ -27,12 +33,23 @@ public class GeneratePackageInfoTask extends DefaultTask {
       }
     }
 
-    packages.each { buildPackageInfo(it) }
+    return packages
+  }
+
+  @OutputDirectory
+  def File getGeneratedDir() {
+    return new File(this.extension.generatedDir)
+  }
+
+  @TaskAction
+  def void generatePackageInfo() {
+    getSourcePackages().each { buildPackageInfo(it) }
   }
 
   def void buildPackageInfo(package) {
-    def dotToSlash = package.replaceAll('\\.', '/')
-    def dir = this.project.mkdir("${extension.generatedDir}/${dotToSlash}")
+    String basePath = getGeneratedDir().path
+    String dottedPath = package.replaceAll('\\.', '/')
+    File dir = this.project.mkdir("${basePath}/${dottedPath}")
     File outputFile = new File(dir.absolutePath, 'package-info.java')
     String templateOutput = getPackageInfoTemplate(package)
 
