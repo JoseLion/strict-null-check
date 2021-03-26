@@ -2,6 +2,7 @@ package com.github.joselion.strictnullcheck
 
 import groovy.io.FileType
 
+import java.util.List
 import java.util.Set
 
 import javax.inject.Inject
@@ -14,13 +15,27 @@ import org.gradle.api.tasks.TaskAction
 
 public class GeneratePackageInfoTask extends DefaultTask {
 
-  @Input
   private StrictNullCheckExtension extension
 
   @Inject
   public GeneratePackageInfoTask(StrictNullCheckExtension extension) {
     super();
     this.extension = extension
+  }
+
+  @Input
+  def String getGeneratedDirPath() {
+    return this.extension.generatedDir
+  }
+
+  @Input
+  def List<String> getAnnotations() {
+    return this.extension.annotations
+  }
+
+  @Input
+  def String getPackageJavadoc() {
+    return this.extension.packageJavadoc ?: ''
   }
 
   @InputFiles
@@ -38,7 +53,7 @@ public class GeneratePackageInfoTask extends DefaultTask {
 
   @OutputDirectory
   def File getGeneratedDir() {
-    return new File(this.extension.generatedDir)
+    return new File(getGeneratedDirPath())
   }
 
   @TaskAction
@@ -58,9 +73,9 @@ public class GeneratePackageInfoTask extends DefaultTask {
   }
 
   def String buildPackageJavadoc() {
-    def annotationList = extension.annotations.collect({ " *   <li>$it</li>" }).join('\n')
-    def javadoc = extension.packageJavadoc != null
-      ? '\n| * \n|' + extension.packageJavadoc.split('\n').collect({ " * $it" }).join('\n')
+    def annotationList = getAnnotations().collect({ " *   <li>$it</li>" }).join('\n')
+    def javadoc = !getPackageJavadoc().isEmpty()
+      ? '\n| * \n|' + getPackageJavadoc().split('\n').collect({ " * $it" }).join('\n')
       : ''
 
     return """\
@@ -76,10 +91,10 @@ public class GeneratePackageInfoTask extends DefaultTask {
   def String getPackageInfoTemplate(packageName) {
     return """\
       |${buildPackageJavadoc()}
-      |${extension.annotations.collect({ cannonicalToAnnotation(it) }).join('\n')}
+      |${getAnnotations().collect({ cannonicalToAnnotation(it) }).join('\n')}
       |package $packageName;
 
-      |${extension.annotations.collect({ cannonicalToImport(it) }).join('\n')}
+      |${getAnnotations().collect({ cannonicalToImport(it) }).join('\n')}
     |"""
     .stripMargin()
   }
