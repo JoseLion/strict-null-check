@@ -1,2 +1,4 @@
 rootProject.name = 'strict-null-check'
 include('plugin')
+
+enableFeaturePreview('ONE_LOCKFILE_PER_PROJECT')
