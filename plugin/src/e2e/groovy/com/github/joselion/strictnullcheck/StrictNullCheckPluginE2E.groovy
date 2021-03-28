@@ -1,8 +1,8 @@
 package com.github.joselion.strictnullcheck
 
-import spock.lang.Specification
-
 import org.gradle.testkit.runner.GradleRunner
+
+import spock.lang.Specification
 
 class StrictNullCheckPluginE2E extends Specification {
 
@@ -62,7 +62,7 @@ class StrictNullCheckPluginE2E extends Specification {
         |}
 
         |task showAnnotations() {
-        |  println('ANNOTATIONS: ' + strictNullCheck.annotations)
+        |  println('ANNOTATIONS: ' + strictNullCheck.annotations.get())
         |}
       |"""
       .stripMargin()
@@ -101,7 +101,7 @@ class StrictNullCheckPluginE2E extends Specification {
         |}
 
         |task showAnnotations() {
-        |  println('ANNOTATIONS: ' + strictNullCheck.annotations)
+        |  println('ANNOTATIONS: ' + strictNullCheck.annotations.get())
         |}
       |"""
       .stripMargin()

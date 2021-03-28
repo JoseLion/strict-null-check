@@ -1,24 +1,22 @@
 package com.github.joselion.strictnullcheck
 
-import spock.lang.Specification
-
 import org.gradle.testfixtures.ProjectBuilder
+
+import spock.lang.Specification
 
 class GeneratePackageInfoTaskTest extends Specification {
 
   def 'getPackageInfoTemplate test'() {
     given:
       def project = ProjectBuilder.builder().build()
-      def extension = new StrictNullCheckExtension(project)
-      extension.annotations = [
-        'org.springframework.lang.NonNullApi',
-        'org.springframework.lang.NonNullFields'
-      ]
-      def task = project.tasks.create(
-        'generatePackageInfo',
-        GeneratePackageInfoTask,
-        extension
-      )
+      def task = project.task('generatePackageInfo', type: GeneratePackageInfoTask) {
+        annotations = [
+          'org.springframework.lang.NonNullApi',
+          'org.springframework.lang.NonNullFields'
+        ]
+        packageJavadoc = ''
+        outputDir = "$project.buildDir/genereted"
+      }
 
     when:
       def template = task.getPackageInfoTemplate('com.github.joselion.somepackage')
@@ -45,12 +43,11 @@ class GeneratePackageInfoTaskTest extends Specification {
   def 'buildPackageJavadoc without extension.packageJavadoc'() {
     given:
       def project = ProjectBuilder.builder().build()
-      def extension = new StrictNullCheckExtension(project)
-      def task = project.tasks.create(
-        'generatePackageInfo',
-        GeneratePackageInfoTask,
-        extension
-      )
+      def task = project.task('generatePackageInfo', type: GeneratePackageInfoTask) {
+        annotations = ['org.eclipse.jdt.annotation.NonNullByDefault']
+        packageJavadoc = ''
+        outputDir = "$project.buildDir/genereted"
+      }
 
     when:
       def packageJavadoc = task.buildPackageJavadoc()
@@ -69,16 +66,14 @@ class GeneratePackageInfoTaskTest extends Specification {
   def 'buildPackageJavadoc with extension.packageJavadoc'() {
     given:
       def project = ProjectBuilder.builder().build()
-      def extension = new StrictNullCheckExtension(project)
-      extension.packageJavadoc = """\
-        |@author JoseLion
-        |@since v1.1.0"""
-      .stripMargin()
-      def task = project.tasks.create(
-        'generatePackageInfo',
-        GeneratePackageInfoTask,
-        extension
-      )
+      def task = project.task('generatePackageInfo', type: GeneratePackageInfoTask) {
+        annotations = ['org.eclipse.jdt.annotation.NonNullByDefault']
+        packageJavadoc = """\
+          |@author JoseLion
+          |@since v1.1.0"""
+        .stripMargin()
+        outputDir = "$project.buildDir/genereted"
+      }
 
     when:
       def packageJavadoc = task.buildPackageJavadoc()
