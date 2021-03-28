@@ -41,8 +41,8 @@ jobs:
       - gradle/with_cache:
           steps:
             - run:
-                name: Build artifact
-                command: ./gradlew jar
+                name: Assemble
+                command: ./gradlew assemble
 
             - run:
                 name: Publish plugin
