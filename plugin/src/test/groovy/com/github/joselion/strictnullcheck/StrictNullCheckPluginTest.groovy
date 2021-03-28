@@ -1,6 +1,7 @@
 package com.github.joselion.strictnullcheck
 
 import org.gradle.testfixtures.ProjectBuilder
+
 import spock.lang.Specification
 
 class StrictNullCheckPluginTest extends Specification {
@@ -15,11 +16,11 @@ class StrictNullCheckPluginTest extends Specification {
     then:
       def ext = project.extensions.findByName('strictNullCheck')
       ext != null
-      ext.annotations == ['org.eclipse.jdt.annotation.NonNullByDefault']
-      ext.generatedDir == "$project.buildDir/generated"
-      ext.packageJavadoc == null
-      ext.versions.findBugs == '3.0.2'
-      ext.versions.eclipseAnnotations == '2.2.600'
+      ext.annotations.get() == ['org.eclipse.jdt.annotation.NonNullByDefault']
+      ext.generatedDir.get() == "$project.buildDir/generated"
+      ext.packageJavadoc.get() == ''
+      ext.versions.get().findBugs.get() == '3.0.2'
+      ext.versions.get().eclipseAnnotations.get() == '2.2.600'
   }
 
 

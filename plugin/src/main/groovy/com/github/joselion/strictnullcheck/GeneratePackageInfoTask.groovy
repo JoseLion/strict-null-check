@@ -5,9 +5,9 @@ import groovy.io.FileType
 import java.util.List
 import java.util.Set
 
-import javax.inject.Inject
-
 import org.gradle.api.DefaultTask
+import org.gradle.api.provider.ListProperty
+import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.OutputDirectory
@@ -15,28 +15,14 @@ import org.gradle.api.tasks.TaskAction
 
 public class GeneratePackageInfoTask extends DefaultTask {
 
-  private StrictNullCheckExtension extension
-
-  @Inject
-  public GeneratePackageInfoTask(StrictNullCheckExtension extension) {
-    super();
-    this.extension = extension
-  }
+  @Input
+  final Property<String> outputDir = project.objects.property(String)
 
   @Input
-  def String getGeneratedDirPath() {
-    return this.extension.generatedDir
-  }
+  final ListProperty<String> annotations = project.objects.listProperty(String)
 
   @Input
-  def List<String> getAnnotations() {
-    return this.extension.annotations
-  }
-
-  @Input
-  def String getPackageJavadoc() {
-    return this.extension.packageJavadoc ?: ''
-  }
+  final Property<String> packageJavadoc = project.objects.property(String)
 
   @InputFiles
   def Set<File> getSourcePackages() {
@@ -53,7 +39,7 @@ public class GeneratePackageInfoTask extends DefaultTask {
 
   @OutputDirectory
   def File getGeneratedDir() {
-    return new File(getGeneratedDirPath())
+    return new File(this.outputDir.get())
   }
 
   @TaskAction
@@ -73,9 +59,9 @@ public class GeneratePackageInfoTask extends DefaultTask {
   }
 
   def String buildPackageJavadoc() {
-    def annotationList = getAnnotations().collect({ " *   <li>$it</li>" }).join('\n')
-    def javadoc = !getPackageJavadoc().isEmpty()
-      ? '\n| * \n|' + getPackageJavadoc().split('\n').collect({ " * $it" }).join('\n')
+    def annotationList = this.annotations.get().collect({ " *   <li>$it</li>" }).join('\n')
+    def javadoc = !this.packageJavadoc.get().isEmpty()
+      ? '\n| * \n|' + this.packageJavadoc.get().split('\n').collect({ " * $it" }).join('\n')
       : ''
 
     return """\
@@ -91,10 +77,10 @@ public class GeneratePackageInfoTask extends DefaultTask {
   def String getPackageInfoTemplate(packageName) {
     return """\
       |${buildPackageJavadoc()}
-      |${getAnnotations().collect({ cannonicalToAnnotation(it) }).join('\n')}
+      |${this.annotations.get().collect({ cannonicalToAnnotation(it) }).join('\n')}
       |package $packageName;
 
-      |${getAnnotations().collect({ cannonicalToImport(it) }).join('\n')}
+      |${this.annotations.get().collect({ cannonicalToImport(it) }).join('\n')}
     |"""
     .stripMargin()
   }
