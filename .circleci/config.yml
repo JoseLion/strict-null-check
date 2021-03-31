@@ -46,6 +46,10 @@ jobs:
           command: ./gradlew compileGroovy compileTestGroovy compileE2eGroovy
 
       - run:
+          name: Lint
+          command: ./gradlew codenarcMain codenarcTest codenarcE2e
+
+      - run:
           name: Test
           command: ./gradlew test
 

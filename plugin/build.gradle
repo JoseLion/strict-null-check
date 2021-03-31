@@ -5,6 +5,7 @@ buildscript {
 }
 
 plugins {
+  id 'codenarc'
   id 'groovy'
   id 'java-gradle-plugin'
 
@@ -17,6 +18,11 @@ group = 'com.github.joselion'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
+
+codenarc {
+  reportFormat('console')
+  toolVersion('2.0.0')
+}
 
 repositories {
   jcenter()
