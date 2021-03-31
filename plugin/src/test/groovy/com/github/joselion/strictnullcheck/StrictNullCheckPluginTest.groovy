@@ -19,8 +19,8 @@ class StrictNullCheckPluginTest extends Specification {
       ext.annotations.get() == ['org.eclipse.jdt.annotation.NonNullByDefault']
       ext.generatedDir.get() == "$project.buildDir/generated"
       ext.packageJavadoc.get() == ''
-      ext.versions.get().findBugs.get() == '3.0.2'
-      ext.versions.get().eclipseAnnotations.get() == '2.2.600'
+      ext.versions.findBugs.get() == '3.0.2'
+      ext.versions.eclipseAnnotations.get() == '2.2.600'
   }
 
 
