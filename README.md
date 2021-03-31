@@ -7,7 +7,7 @@ The `strict-null-check` plugin leverages _possible_ implementations of JSR-305 t
 Although, it's important to take into account that:
 * The `package-info.java` files are generated right after the `classes` task, so you might need to compile (or run `./gradlew classes`) whenever you create a new package
 * By default, the `package-info.java` files are created on the project's `build/` folder, under a `generated/` directory. However, this can be configured by the plugin's extension
-* The plugin adds Findbug's JSR-305 as a `compileOnly` dependency. The version can be configured through the plugin's extension
+* The plugin adds FindBug's JSR-305 as a `compileOnly` dependency. The version can be configured through the plugin's extension
 
 ## Requirements
 * The [Java Plugin](https://docs.gradle.org/current/userguide/java_plugin.html) is required to:
@@ -47,9 +47,9 @@ buildscript {
 apply plugin: 'com.github.joselion.strict-null-check'
 ```
 
-With the plugin applied, run `./gradlew classes` and the `package-info.java` filetree will be generated. And that's it! But remember, whenever a new package is created you'll need to run the `classes` task again.
+With the plugin applied, run `./gradlew classes` and the `package-info.java` file tree will be generated for you. And that's it! But remember, whenever a new package is created you'll need to run the `classes` task again.
 
-**Note**: Runnig `./gradlew build` will also do the trick since the `build` task depends on the `compileJava` task, which depends on the `classes` task.
+**Note**: Running `./gradlew build` will also do the trick since the `build` task depends on the `compileJava` task, which depends on the `classes` task.
 
 ## Extension
 The default extension configuration looks like this:
@@ -69,7 +69,7 @@ strictNullCheck {
 | --------------------------- | :-----------------------------------------------: | ----------- |
 | annotation                  | `['org.eclipse.jdt.annotation.NonNullByDefault']` | List of fully qualified class names of the annotations to add to all the generated `package-info.java` files |
 | generatedDir                | `"$buildDir/generated"`                           | The directory where the `package-info.java` files should be generated |
-| packageJavadoc              | -                                                 | A single or multi-line string to add to the javadoc of the generated `package-info.java` files |
+| packageJavadoc              | -                                                 | A single or multi-line string to add to the Javadoc of the generated `package-info.java` files |
 | versions                    | -                                                 | A closure to configure the versions of the dependencies added |
 | versions.findBugs           | `'3.0.2'`                                         | The `FindBugs JSR305` version to use. Check the [MVNRepo][1] for more versions |
 | versions.eclipseAnnotations | `'2.2.600'`                                       | The `JDT Annotations` version to use. Check the [MVNRepo][2] for more versions |
