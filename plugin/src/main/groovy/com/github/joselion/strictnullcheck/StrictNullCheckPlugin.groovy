@@ -13,8 +13,8 @@ class StrictNullCheckPlugin implements Plugin<Project> {
 
     project.plugins.withType(JavaPlugin) {
       Configuration configuration = project.getConfigurations().getByName('compileOnly')
-      String findbugsVersion = project.strictNullCheck.versions.get().findBugs.get()
-      String eclipseVersion = project.strictNullCheck.versions.get().eclipseAnnotations.get()
+      String findbugsVersion = project.strictNullCheck.versions.findBugs.get()
+      String eclipseVersion = project.strictNullCheck.versions.eclipseAnnotations.get()
 
       configuration.getDependencies().addAll([
         project.getDependencies().create("com.google.code.findbugs:jsr305:$findbugsVersion"),
