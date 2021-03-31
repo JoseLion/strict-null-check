@@ -22,7 +22,7 @@ class GeneratePackageInfoTaskTest extends Specification {
       def template = task.getPackageInfoTemplate('com.github.joselion.somepackage')
 
     then:
-      template == """\
+      template == '''\
         |/**
         | * This package is checked for {@code null} by the following annotations:
         | * <ul>
@@ -36,7 +36,7 @@ class GeneratePackageInfoTaskTest extends Specification {
         |
         |import org.springframework.lang.NonNullApi;
         |import org.springframework.lang.NonNullFields;
-      |"""
+      |'''
       .stripMargin()
   }
 
@@ -53,13 +53,13 @@ class GeneratePackageInfoTaskTest extends Specification {
       def packageJavadoc = task.buildPackageJavadoc()
 
     then:
-      packageJavadoc == """\
+      packageJavadoc == '''\
         |/**
         | * This package is checked for {@code null} by the following annotations:
         | * <ul>
         | *   <li>org.eclipse.jdt.annotation.NonNullByDefault</li>
         | * </ul>
-        | */"""
+        | */'''
       .stripMargin()
   }
 
@@ -68,9 +68,9 @@ class GeneratePackageInfoTaskTest extends Specification {
       def project = ProjectBuilder.builder().build()
       def task = project.task('generatePackageInfo', type: GeneratePackageInfoTask) {
         annotations = ['org.eclipse.jdt.annotation.NonNullByDefault']
-        packageJavadoc = """\
+        packageJavadoc = '''\
           |@author JoseLion
-          |@since v1.1.0"""
+          |@since v1.1.0'''
         .stripMargin()
         outputDir = "$project.buildDir/genereted"
       }
@@ -79,7 +79,7 @@ class GeneratePackageInfoTaskTest extends Specification {
       def packageJavadoc = task.buildPackageJavadoc()
 
     then:
-      packageJavadoc == """\
+      packageJavadoc == '''\
         |/**
         | * This package is checked for {@code null} by the following annotations:
         | * <ul>
@@ -88,7 +88,7 @@ class GeneratePackageInfoTaskTest extends Specification {
         | * 
         | * @author JoseLion
         | * @since v1.1.0
-        | */"""
+        | */'''
       .stripMargin()
   }
 }

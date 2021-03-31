@@ -1,16 +1,13 @@
 package com.github.joselion.strictnullcheck
 
-import java.util.List
-
 import javax.inject.Inject
 
-import org.gradle.api.Project
 import org.gradle.api.file.ProjectLayout
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
 
-public class StrictNullCheckExtension {
+class StrictNullCheckExtension {
 
   final ListProperty<String> annotations
 
@@ -32,20 +29,20 @@ public class StrictNullCheckExtension {
     this.packageJavadoc.convention('')
   }
 
-  public void useSpring() {
+  void useSpring() {
     this.annotations.convention([
       'org.springframework.lang.NonNullApi',
       'org.springframework.lang.NonNullFields'
     ])
   }
 
-  public void versions(Closure closure) {
+  void versions(Closure closure) {
     closure.resolveStrategy = Closure.DELEGATE_FIRST
     closure.delegate = versions
     closure()
   }
 
-  public static class Versions {
+  static class Versions {
 
     final Property<String> eclipseAnnotations
 

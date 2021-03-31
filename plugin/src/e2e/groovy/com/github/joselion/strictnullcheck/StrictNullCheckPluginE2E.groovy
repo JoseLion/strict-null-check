@@ -6,14 +6,14 @@ import spock.lang.Specification
 
 class StrictNullCheckPluginE2E extends Specification {
 
-  def "can apply plugin"() {
+  def 'can apply plugin'() {
     given:
-      def projectDir = new File("build/e2e")
+      def projectDir = new File('build/e2e')
       projectDir.mkdirs()
-      new File(projectDir, "settings.gradle") << ""
-      def buildGradle = new File(projectDir, "build.gradle")
+      new File(projectDir, 'settings.gradle') << ''
+      def buildGradle = new File(projectDir, 'build.gradle')
       buildGradle.bytes = []
-      buildGradle << """\
+      buildGradle << '''\
         |plugins {
         |  id('java')
         |  id('com.github.joselion.strict-null-check')
@@ -22,29 +22,29 @@ class StrictNullCheckPluginE2E extends Specification {
         |repositories {
         |  jcenter()
         |}
-      |"""
+      |'''
       .stripMargin()
 
     when:
       def runner = GradleRunner.create()
       runner.forwardOutput()
       runner.withPluginClasspath()
-      runner.withArguments("classes")
+      runner.withArguments('classes')
       runner.withProjectDir(projectDir)
       def result = runner.build()
 
     then:
-      result.output.contains("BUILD SUCCESSFUL")
+      result.output.contains('BUILD SUCCESSFUL')
   }
 
-  def "can configure the plugin extension"() {
+  def 'can configure the plugin extension'() {
     given:
-      def projectDir = new File("build/e2e")
+      def projectDir = new File('build/e2e')
       projectDir.mkdirs()
-      new File(projectDir, "settings.gradle") << ""
-      def buildGradle = new File(projectDir, "build.gradle")
+      new File(projectDir, 'settings.gradle') << ''
+      def buildGradle = new File(projectDir, 'build.gradle')
       buildGradle.bytes = []
-      buildGradle << """\
+      buildGradle << '''\
         |plugins {
         |  id('java')
         |  id('com.github.joselion.strict-null-check')
@@ -62,18 +62,18 @@ class StrictNullCheckPluginE2E extends Specification {
         |  versions.findBugs = '1.0.0';
         |}
         |
-        |task showAnnotations() {
+        |task showExtension() {
         |  println('ANNOTATIONS: ' + strictNullCheck.annotations.get())
         |  println('FINDBUGS: ' + strictNullCheck.versions.findBugs.get())
         |}
-      |"""
+      |'''
       .stripMargin()
 
     when:
       def runner = GradleRunner.create()
       runner.forwardOutput()
       runner.withPluginClasspath()
-      runner.withArguments("showAnnotations")
+      runner.withArguments('showExtension')
       runner.withProjectDir(projectDir)
       def result = runner.build()
 
@@ -84,12 +84,12 @@ class StrictNullCheckPluginE2E extends Specification {
 
   def "can use closures to configure the plugin extension"() {
     given:
-      def projectDir = new File("build/e2e")
+      def projectDir = new File('build/e2e')
       projectDir.mkdirs()
-      new File(projectDir, "settings.gradle") << ""
-      def buildGradle = new File(projectDir, "build.gradle")
+      new File(projectDir, 'settings.gradle') << ''
+      def buildGradle = new File(projectDir, 'build.gradle')
       buildGradle.bytes = []
-      buildGradle << """\
+      buildGradle << '''\
         |plugins {
         |  id('java')
         |  id('com.github.joselion.strict-null-check')
@@ -106,36 +106,36 @@ class StrictNullCheckPluginE2E extends Specification {
         |  }
         |}
         |
-        |task showAnnotations() {
+        |task showVersions() {
         |  def versions = [
         |    eclipse: strictNullCheck.versions.eclipseAnnotations.get(),
         |    findBugs: strictNullCheck.versions.findBugs.get()
         |  ]
         |  println('VERSIONS: ' + versions)
         |}
-      |"""
+      |'''
       .stripMargin()
 
     when:
       def runner = GradleRunner.create()
       runner.forwardOutput()
       runner.withPluginClasspath()
-      runner.withArguments("showAnnotations")
+      runner.withArguments('showVersions')
       runner.withProjectDir(projectDir)
       def result = runner.build()
 
     then:
-      result.output.contains("VERSIONS: [eclipse:1.1.000, findBugs:1.0.0]")
+      result.output.contains('VERSIONS: [eclipse:1.1.000, findBugs:1.0.0]')
   }
 
   def 'can call useSpring to set Spring annotations'() {
     given:
-      def projectDir = new File("build/e2e")
+      def projectDir = new File('build/e2e')
       projectDir.mkdirs()
-      new File(projectDir, "settings.gradle") << ""
-      def buildGradle = new File(projectDir, "build.gradle")
+      new File(projectDir, 'settings.gradle') << ''
+      def buildGradle = new File(projectDir, 'build.gradle')
       buildGradle.bytes = []
-      buildGradle << """\
+      buildGradle << '''\
         |plugins {
         |  id('java')
         |  id('com.github.joselion.strict-null-check')
@@ -152,18 +152,18 @@ class StrictNullCheckPluginE2E extends Specification {
         |task showAnnotations() {
         |  println('ANNOTATIONS: ' + strictNullCheck.annotations.get())
         |}
-      |"""
+      |'''
       .stripMargin()
 
     when:
       def runner = GradleRunner.create()
       runner.forwardOutput()
       runner.withPluginClasspath()
-      runner.withArguments("showAnnotations")
+      runner.withArguments('showAnnotations')
       runner.withProjectDir(projectDir)
       def result = runner.build()
 
     then:
-      result.output.contains("ANNOTATIONS: [org.springframework.lang.NonNullApi, org.springframework.lang.NonNullFields]")
+      result.output.contains('ANNOTATIONS: [org.springframework.lang.NonNullApi, org.springframework.lang.NonNullFields]')
   }
 }

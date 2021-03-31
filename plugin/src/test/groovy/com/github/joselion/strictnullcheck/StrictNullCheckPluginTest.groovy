@@ -11,7 +11,7 @@ class StrictNullCheckPluginTest extends Specification {
 
     when:
       project.plugins.apply('java')
-      project.plugins.apply("com.github.joselion.strict-null-check")
+      project.plugins.apply('com.github.joselion.strict-null-check')
 
     then:
       def ext = project.extensions.findByName('strictNullCheck')
@@ -30,10 +30,10 @@ class StrictNullCheckPluginTest extends Specification {
 
     when:
       project.plugins.apply('java')
-      project.plugins.apply("com.github.joselion.strict-null-check")
+      project.plugins.apply('com.github.joselion.strict-null-check')
 
     then:
-      project.tasks.findByName("generatePackageInfo") != null
+      project.tasks.findByName('generatePackageInfo') != null
   }
 
   def 'the classes task is finalized by generatePackageInfo task'() {
@@ -42,10 +42,10 @@ class StrictNullCheckPluginTest extends Specification {
 
     when:
       project.plugins.apply('java')
-      project.plugins.apply("com.github.joselion.strict-null-check")
+      project.plugins.apply('com.github.joselion.strict-null-check')
 
     then:
-      def generateTask = project.tasks.findByName("generatePackageInfo")
+      def generateTask = project.tasks.findByName('generatePackageInfo')
       def classesTask = project.tasks.getByName('classes')
 
       generateTask != null
