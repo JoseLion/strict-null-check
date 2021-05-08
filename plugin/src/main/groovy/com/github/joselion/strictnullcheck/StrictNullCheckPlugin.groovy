@@ -24,12 +24,13 @@ class StrictNullCheckPlugin implements Plugin<Project> {
       project.sourceSets.main.java.srcDirs(project.strictNullCheck.generatedDir.get())
 
       project.task('generatePackageInfo', type: GeneratePackageInfoTask) {
+        dependsOn(project.tasks.buildNeeded)
+        mustRunAfter(project.tasks.build)
+
         annotations = project.strictNullCheck.annotations
         outputDir = project.strictNullCheck.generatedDir
         packageJavadoc = project.strictNullCheck.packageJavadoc
       }
-
-      project.tasks.classes.finalizedBy(project.tasks.generatePackageInfo)
     }
   }
 }
