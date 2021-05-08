@@ -36,7 +36,7 @@ class StrictNullCheckPluginTest extends Specification {
       project.tasks.findByName('generatePackageInfo') != null
   }
 
-  def 'the classes task is finalized by generatePackageInfo task'() {
+  def 'the generatePackageInfo task must run after the build task'() {
     given:
       def project = ProjectBuilder.builder().build()
 
@@ -46,10 +46,10 @@ class StrictNullCheckPluginTest extends Specification {
 
     then:
       def generateTask = project.tasks.findByName('generatePackageInfo')
-      def classesTask = project.tasks.getByName('classes')
+      def buildTask = project.tasks.getByName('build')
 
       generateTask != null
-      classesTask != null
-      classesTask.getFinalizedBy().getDependencies().contains(generateTask) == true
+      buildTask != null
+      generateTask.getMustRunAfter().getDependencies().contains(buildTask) == true
   }
 }
