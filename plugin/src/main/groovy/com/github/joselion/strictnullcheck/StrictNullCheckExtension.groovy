@@ -25,7 +25,7 @@ class StrictNullCheckExtension {
     this.versions = objects.newInstance(Versions)
 
     this.annotations.convention(['org.eclipse.jdt.annotation.NonNullByDefault'])
-    this.generatedDir.convention(layout.buildDirectory.get().asFile.path + '/generated')
+    this.generatedDir.convention(layout.buildDirectory.get().asFile.path + '/generated/sources/strictNullCheck')
     this.packageJavadoc.convention('')
   }
 

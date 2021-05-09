@@ -3,7 +3,6 @@ package com.github.joselion.strictnullcheck
 import org.gradle.testfixtures.ProjectBuilder
 
 import spock.lang.Specification
-import spock.lang.Ignore
 
 class StrictNullCheckPluginTest extends Specification {
   def 'plugin extension has default values'() {
@@ -18,7 +17,7 @@ class StrictNullCheckPluginTest extends Specification {
       def ext = project.extensions.findByName('strictNullCheck')
       ext != null
       ext.annotations.get() == ['org.eclipse.jdt.annotation.NonNullByDefault']
-      ext.generatedDir.get() == "$project.buildDir/generated"
+      ext.generatedDir.get() == "$project.buildDir/generated/sources/strictNullCheck"
       ext.packageJavadoc.get() == ''
       ext.versions.findBugs.get() == '3.0.2'
       ext.versions.eclipseAnnotations.get() == '2.2.600'
@@ -37,8 +36,7 @@ class StrictNullCheckPluginTest extends Specification {
       project.tasks.findByName('generatePackageInfo') != null
   }
 
-  @Ignore
-  def 'the generatePackageInfo task must run after the build task'() {
+  def 'the compileJava task depends on generatePackageInfo task'() {
     given:
       def project = ProjectBuilder.builder().build()
 
@@ -48,10 +46,10 @@ class StrictNullCheckPluginTest extends Specification {
 
     then:
       def generateTask = project.tasks.findByName('generatePackageInfo')
-      def buildTask = project.tasks.getByName('build')
+      def compileJavaTask = project.tasks.getByName('compileJava')
 
       generateTask != null
-      buildTask != null
-      generateTask.getMustRunAfter().getDependencies().contains(buildTask) == true
+      compileJavaTask != null
+      compileJavaTask.getDependsOn().contains(generateTask) == true
   }
 }

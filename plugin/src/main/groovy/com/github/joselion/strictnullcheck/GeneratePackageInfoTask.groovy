@@ -8,6 +8,7 @@ import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.OutputDirectory
+import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.TaskAction
 
 class GeneratePackageInfoTask extends DefaultTask {
@@ -25,7 +26,7 @@ class GeneratePackageInfoTask extends DefaultTask {
   Set<File> getSourcePackages() {
     Set packages = [] as Set
 
-    new File('.').eachFileRecurse(FileType.FILES) {
+    new File('./src').eachFileRecurse(FileType.FILES) {
       if (it.name.endsWith('.java')) {
         packages << ((it.text =~ 'package (.+);')[0][1])
       }
@@ -41,15 +42,15 @@ class GeneratePackageInfoTask extends DefaultTask {
 
   @TaskAction
   void generatePackageInfo() {
-    getSourcePackages().each { buildPackageInfo(it) }
+    getSourcePackages().each(this.&buildPackageInfo)
   }
 
-  void buildPackageInfo(package) {
+  void buildPackageInfo(String packageName) {
     String basePath = getGeneratedDir().path
-    String dottedPath = package.replaceAll('\\.', '/')
-    File dir = this.project.mkdir("${basePath}/${dottedPath}")
+    String dashedPath = packageName.replaceAll('\\.', '/')
+    File dir = this.project.mkdir("${basePath}/java/main/${dashedPath}")
     File outputFile = new File(dir.absolutePath, 'package-info.java')
-    String templateOutput = getPackageInfoTemplate(package)
+    String templateOutput = getPackageInfoTemplate(packageName)
 
     outputFile.bytes = []
     outputFile << templateOutput
