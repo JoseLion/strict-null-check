@@ -30,7 +30,7 @@ class StrictNullCheckPlugin implements Plugin<Project> {
       project.tasks.compileJava.dependsOn(project.tasks.generatePackageInfo)
 
       project.sourceSets.main.java {
-        srcDir(project.strictNullCheck.generatedDir.get())
+        srcDir("${project.strictNullCheck.generatedDir.get()}/java/main")
       }
     }
   }
