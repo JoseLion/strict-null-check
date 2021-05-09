@@ -21,12 +21,16 @@ class StrictNullCheckPlugin implements Plugin<Project> {
         project.getDependencies().create("org.eclipse.jdt:org.eclipse.jdt.annotation:$eclipseVersion")
       ])
 
-      project.sourceSets.main.java.srcDirs(project.strictNullCheck.generatedDir.get())
-
       project.task('generatePackageInfo', type: GeneratePackageInfoTask) {
         annotations = project.strictNullCheck.annotations
         outputDir = project.strictNullCheck.generatedDir
         packageJavadoc = project.strictNullCheck.packageJavadoc
+      }
+
+      project.tasks.compileJava.dependsOn(project.tasks.generatePackageInfo)
+
+      project.sourceSets.main.java {
+        srcDir(project.strictNullCheck.generatedDir.get())
       }
     }
   }
