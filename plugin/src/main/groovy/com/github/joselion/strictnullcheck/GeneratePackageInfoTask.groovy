@@ -26,8 +26,10 @@ class GeneratePackageInfoTask extends DefaultTask {
     Set packages = [] as Set
 
     new File('./src').eachFileRecurse(FileType.FILES) {
-      if (it.name.endsWith('.java')) {
-        packages << ((it.text =~ 'package (.+);')[0][1])
+      def matcher = it.text =~ 'package (.+);'
+
+      if (it.name.endsWith('.java') && matcher.matches()) {
+        packages << matcher[0][1]
       }
     }
 
