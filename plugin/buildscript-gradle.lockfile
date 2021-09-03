@@ -3,11 +3,11 @@
 # This file is expected to be part of source control.
 com.beust:jcommander:1.78=classpath
 com.github.javaparser:javaparser-core:3.18.0=classpath
-com.github.joselion.pretty-jupiter:com.github.joselion.pretty-jupiter.gradle.plugin:1.6.0=classpath
+com.github.joselion.pretty-jupiter:com.github.joselion.pretty-jupiter.gradle.plugin:1.6.2=classpath
 com.gradle.plugin-publish:com.gradle.plugin-publish.gradle.plugin:0.15.0=classpath
 com.gradle.publish:plugin-publish-plugin:0.15.0=classpath
 com.thoughtworks.qdox:qdox:1.12.1=classpath
-gradle.plugin.com.github.joselion.pretty-jupiter:pretty-jupiter:1.6.0=classpath
+gradle.plugin.com.github.joselion.pretty-jupiter:pretty-jupiter:1.6.2=classpath
 info.picocli:picocli:4.5.2=classpath
 jline:jline:2.14.6=classpath
 junit:junit:4.13.2=classpath
