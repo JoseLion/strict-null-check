@@ -27,8 +27,12 @@ class StrictNullCheckPlugin implements Plugin<Project> {
         packageJavadoc = project.strictNullCheck.packageJavadoc
       }
 
-      ['compileJava', 'sourcesJar'].forEach {
-        project.tasks.findByName(it)?.dependsOn(project.tasks.generatePackageInfo)
+      project.tasks.compileJava.dependsOn(project.tasks.generatePackageInfo)
+
+      project.tasks.whenTaskAdded { task ->
+        if (task.name == 'sourcesJar') {
+          task.dependsOn(project.tasks.generatePackageInfo)
+        }
       }
 
       project.sourceSets.main.java {
