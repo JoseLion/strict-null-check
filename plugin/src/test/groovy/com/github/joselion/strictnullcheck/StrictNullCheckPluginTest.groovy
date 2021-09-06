@@ -42,8 +42,8 @@ class StrictNullCheckPluginTest extends Specification {
 
     when:
       project.plugins.apply('java')
-      project.java.withSourcesJar()
       project.plugins.apply('com.github.joselion.strict-null-check')
+      project.java.withSourcesJar()
 
     then:
       def generateTask = project.tasks.findByName('generatePackageInfo')
