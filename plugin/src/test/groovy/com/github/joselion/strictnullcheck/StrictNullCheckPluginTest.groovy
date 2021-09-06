@@ -36,20 +36,23 @@ class StrictNullCheckPluginTest extends Specification {
       project.tasks.findByName('generatePackageInfo') != null
   }
 
-  def 'the compileJava task depends on generatePackageInfo task'() {
+  def 'the [compileJava, sourcesJar] tasks depend on the generatePackageInfo task'() {
     given:
       def project = ProjectBuilder.builder().build()
 
     when:
       project.plugins.apply('java')
+      project.java.withSourcesJar()
       project.plugins.apply('com.github.joselion.strict-null-check')
 
     then:
       def generateTask = project.tasks.findByName('generatePackageInfo')
       def compileJavaTask = project.tasks.getByName('compileJava')
+      def sourcesJarTask = project.tasks.getByName('sourcesJar')
 
       generateTask != null
       compileJavaTask != null
       compileJavaTask.getDependsOn().contains(generateTask) == true
+      sourcesJarTask.getDependsOn().contains(generateTask) == true
   }
 }

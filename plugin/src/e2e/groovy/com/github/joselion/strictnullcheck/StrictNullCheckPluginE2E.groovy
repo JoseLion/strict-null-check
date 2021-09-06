@@ -15,8 +15,8 @@ class StrictNullCheckPluginE2E extends Specification {
       buildGradle.bytes = []
       buildGradle << '''\
         |plugins {
-        |  id('java')
-        |  id('com.github.joselion.strict-null-check')
+        |  id 'java'
+        |  id 'com.github.joselion.strict-null-check'
         |}
         |
         |repositories {
@@ -46,8 +46,8 @@ class StrictNullCheckPluginE2E extends Specification {
       buildGradle.bytes = []
       buildGradle << '''\
         |plugins {
-        |  id('java')
-        |  id('com.github.joselion.strict-null-check')
+        |  id 'java'
+        |  id 'com.github.joselion.strict-null-check'
         |}
         |
         |repositories {
@@ -91,8 +91,8 @@ class StrictNullCheckPluginE2E extends Specification {
       buildGradle.bytes = []
       buildGradle << '''\
         |plugins {
-        |  id('java')
-        |  id('com.github.joselion.strict-null-check')
+        |  id 'java'
+        |  id 'com.github.joselion.strict-null-check'
         |}
         |
         |repositories {
@@ -137,8 +137,8 @@ class StrictNullCheckPluginE2E extends Specification {
       buildGradle.bytes = []
       buildGradle << '''\
         |plugins {
-        |  id('java')
-        |  id('com.github.joselion.strict-null-check')
+        |  id 'java'
+        |  id 'com.github.joselion.strict-null-check'
         |}
         |
         |repositories {
