@@ -13,7 +13,7 @@ plugins {
   id 'com.github.joselion.pretty-jupiter' version '1.6.2'
 }
 
-version = '1.4.3'
+version = '1.4.4'
 group = 'com.github.joselion'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
