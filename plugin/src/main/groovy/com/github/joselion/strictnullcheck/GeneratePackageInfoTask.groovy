@@ -28,8 +28,8 @@ class GeneratePackageInfoTask extends DefaultTask {
     new File('./src').eachFileRecurse(FileType.FILES) {
       def matcher = it.text =~ 'package (.+);'
 
-      if (it.name.endsWith('.java') && matcher.matches()) {
-        packages << matcher[0][1]
+      if (it.name.endsWith('.java') && matcher.find()) {
+        packages << matcher.group(1)
       }
     }
 
