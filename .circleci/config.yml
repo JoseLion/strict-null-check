@@ -21,8 +21,8 @@ commands:
 
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "plugin/buildscript-gradle.lockfile" }}-{{ checksum "plugin/gradle.lockfile" }}
-            - v1-dependencies-{{ checksum "plugin/buildscript-gradle.lockfile" }}-
+            - v1-dependencies-{{ checksum "buildscript-gradle.lockfile" }}-{{ checksum "gradle.lockfile" }}
+            - v1-dependencies-{{ checksum "buildscript-gradle.lockfile" }}-
             - v1-dependencies-
 
   store-cache:
@@ -33,7 +33,7 @@ commands:
           paths:
             - ~/repo/strict-null-check/.gradle
             - ~/.gradle
-          key: v1-dependencies-{{ checksum "plugin/buildscript-gradle.lockfile" }}-{{ checksum "plugin/gradle.lockfile" }}
+          key: v1-dependencies-{{ checksum "buildscript-gradle.lockfile" }}-{{ checksum "gradle.lockfile" }}
 
 jobs:
   build:
