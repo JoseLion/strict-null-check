@@ -1,4 +1,4 @@
-package com.github.joselion.strictnullcheck
+package io.github.joselion.strictnullcheck
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project

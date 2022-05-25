@@ -1,4 +1,4 @@
-package com.github.joselion.strictnullcheck
+package io.github.joselion.strictnullcheck
 
 import org.gradle.testfixtures.ProjectBuilder
 
@@ -11,7 +11,7 @@ class StrictNullCheckPluginTest extends Specification {
 
     when:
       project.plugins.apply('java')
-      project.plugins.apply('com.github.joselion.strict-null-check')
+      project.plugins.apply('io.github.joselion.strict-null-check')
 
     then:
       def ext = project.extensions.findByName('strictNullCheck')
@@ -30,7 +30,7 @@ class StrictNullCheckPluginTest extends Specification {
 
     when:
       project.plugins.apply('java')
-      project.plugins.apply('com.github.joselion.strict-null-check')
+      project.plugins.apply('io.github.joselion.strict-null-check')
 
     then:
       project.tasks.findByName('generatePackageInfo') != null
@@ -42,7 +42,7 @@ class StrictNullCheckPluginTest extends Specification {
 
     when:
       project.plugins.apply('java')
-      project.plugins.apply('com.github.joselion.strict-null-check')
+      project.plugins.apply('io.github.joselion.strict-null-check')
       project.java.withSourcesJar()
 
     then:

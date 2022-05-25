@@ -1,4 +1,4 @@
-package com.github.joselion.strictnullcheck
+package io.github.joselion.strictnullcheck
 
 import groovy.io.FileType
 

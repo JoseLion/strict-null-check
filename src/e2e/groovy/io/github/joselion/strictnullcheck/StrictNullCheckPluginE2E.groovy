@@ -1,4 +1,4 @@
-package com.github.joselion.strictnullcheck
+package io.github.joselion.strictnullcheck
 
 import org.gradle.testkit.runner.GradleRunner
 
@@ -16,7 +16,7 @@ class StrictNullCheckPluginE2E extends Specification {
       buildGradle << '''\
         |plugins {
         |  id 'java'
-        |  id 'com.github.joselion.strict-null-check'
+        |  id 'io.github.joselion.strict-null-check'
         |}
         |
         |repositories {
@@ -47,7 +47,7 @@ class StrictNullCheckPluginE2E extends Specification {
       buildGradle << '''\
         |plugins {
         |  id 'java'
-        |  id 'com.github.joselion.strict-null-check'
+        |  id 'io.github.joselion.strict-null-check'
         |}
         |
         |repositories {
@@ -92,7 +92,7 @@ class StrictNullCheckPluginE2E extends Specification {
       buildGradle << '''\
         |plugins {
         |  id 'java'
-        |  id 'com.github.joselion.strict-null-check'
+        |  id 'io.github.joselion.strict-null-check'
         |}
         |
         |repositories {
@@ -138,7 +138,7 @@ class StrictNullCheckPluginE2E extends Specification {
       buildGradle << '''\
         |plugins {
         |  id 'java'
-        |  id 'com.github.joselion.strict-null-check'
+        |  id 'io.github.joselion.strict-null-check'
         |}
         |
         |repositories {
