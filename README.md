@@ -21,13 +21,17 @@ plugins {
 ```
 
 ## Usage
+> **⚠️ BREAKING CHANGES**
+>
+> Due to changes on GitHub, and by consequence Gradle and Maven, it's no longer allowed to use `com.github` as a valid group ID prefix. That being said, from version v2.0.0 of the plugin the ID is now `io.github.joselion.strict-null-check`. If you want to use a version prior to v2.0.0 you can still find it under `com.github.joselion.strict-null-check`, but keep in mind that the `io.github` prefixed ID does not have any v1.x.x version available.
+
 You can get the latest version from Gradle's plugins site:
-https://plugins.gradle.org/plugin/com.github.joselion.strict-null-check
+https://plugins.gradle.org/plugin/io.github.joselion.strict-null-check
 
 Using the [plugins DSL](https://docs.gradle.org/current/userguide/plugins.html#sec:plugins_block):
 ```gradle
 plugins {
-  id 'com.github.joselion.strict-null-check' version 'x.x.x'
+  id 'io.github.joselion.strict-null-check' version 'x.x.x'
 }
 ```
 
@@ -40,11 +44,11 @@ buildscript {
     }
   }
   dependencies {
-    classpath 'gradle.plugin.com.github.joselion:plugin:x.x.x'
+    classpath 'io.github.joselion:plugin:x.x.x'
   }
 }
 
-apply plugin: 'com.github.joselion.strict-null-check'
+apply plugin: 'io.github.joselion.strict-null-check'
 ```
 
 With the plugin applied, run `./gradlew classes` and the `package-info.java` file tree will be generated for you. And that's it! But remember, whenever a new package is created you'll need to run the `classes` task again.
