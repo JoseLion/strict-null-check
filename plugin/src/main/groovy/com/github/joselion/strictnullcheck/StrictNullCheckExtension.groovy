@@ -6,15 +6,21 @@ import org.gradle.api.file.ProjectLayout
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.Nested
 
 class StrictNullCheckExtension {
 
+  @Input
   final ListProperty<String> annotations
 
+  @Input
   final Property<String> generatedDir
 
+  @Input
   final Property<String> packageJavadoc
 
+  @Nested
   final Versions versions
 
   @Inject
@@ -44,8 +50,10 @@ class StrictNullCheckExtension {
 
   static class Versions {
 
+    @Input
     final Property<String> eclipseAnnotations
 
+    @Input
     final Property<String> findBugs
 
     @Inject
