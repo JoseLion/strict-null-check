@@ -1,13 +1,18 @@
 package io.github.joselion.strictnullcheck
 
+import javax.inject.Inject
+
 import groovy.io.FileType
 
 import org.gradle.api.DefaultTask
+import org.gradle.api.Project
 import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
+import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.OutputDirectory
+import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.api.tasks.TaskAction
 
 class GeneratePackageInfoTask extends DefaultTask {
@@ -21,16 +26,30 @@ class GeneratePackageInfoTask extends DefaultTask {
   @Input
   final Property<String> packageJavadoc = project.objects.property(String)
 
+  @Internal
+  final Project project
+
+  @Inject
+  public GeneratePackageInfoTask(Project project) {
+    this.project = project
+  }
+
   @InputFiles
   Set<File> getSourcePackages() {
     Set packages = [] as Set
+    
+    project.extensions.getByType(SourceSetContainer).all { sourceSet ->
+      sourceSet.getAllJava().getSrcDirs()
+        .grep { dir -> !dir.path.startsWith(getGeneratedDir().path) }
+        .each { dir ->
+          dir.eachFileRecurse(FileType.FILES) {
+            def matcher = it.text =~ 'package (.+);'
 
-    new File('./src').eachFileRecurse(FileType.FILES) {
-      def matcher = it.text =~ 'package (.+);'
-
-      if (it.name.endsWith('.java') && matcher.find()) {
-        packages << matcher.group(1)
-      }
+            if (it.name.endsWith('.java') && matcher.find()) {
+              packages << matcher.group(1)
+            }
+          }
+        }
     }
 
     return packages
