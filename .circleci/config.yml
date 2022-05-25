@@ -5,7 +5,7 @@ executors:
     working_directory: ~/repo/strict-null-check
 
     docker:
-      - image: cimg/openjdk:16.0.2
+      - image: cimg/openjdk:17.0.3
         environment:
           JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF-8
           JVM_OPTS: -Xmx4096m
@@ -21,8 +21,8 @@ commands:
 
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "plugin/buildscript-gradle.lockfile" }}-{{ checksum "plugin/gradle.lockfile" }}
-            - v1-dependencies-{{ checksum "plugin/buildscript-gradle.lockfile" }}-
+            - v1-dependencies-{{ checksum "buildscript-gradle.lockfile" }}-{{ checksum "gradle.lockfile" }}
+            - v1-dependencies-{{ checksum "buildscript-gradle.lockfile" }}-
             - v1-dependencies-
 
   store-cache:
@@ -33,7 +33,7 @@ commands:
           paths:
             - ~/repo/strict-null-check/.gradle
             - ~/.gradle
-          key: v1-dependencies-{{ checksum "plugin/buildscript-gradle.lockfile" }}-{{ checksum "plugin/gradle.lockfile" }}
+          key: v1-dependencies-{{ checksum "buildscript-gradle.lockfile" }}-{{ checksum "gradle.lockfile" }}
 
 jobs:
   build:
