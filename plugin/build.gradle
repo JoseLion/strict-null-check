@@ -9,19 +9,18 @@ plugins {
   id 'groovy'
   id 'java-gradle-plugin'
 
-  id 'com.gradle.plugin-publish' version '0.15.0'
-  id 'com.github.joselion.pretty-jupiter' version '1.6.2'
+  id 'com.gradle.plugin-publish' version '1.0.0-rc-2'
+  id 'io.github.joselion.pretty-jupiter' version '2.0.1'
 }
 
-version = '1.4.4'
 group = 'com.github.joselion'
-
+version = '1.4.4'
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 codenarc {
   reportFormat('console')
-  toolVersion('2.2.0')
+  toolVersion('3.0.1')
 }
 
 repositories {
@@ -33,12 +32,9 @@ dependencyLocking {
 }
 
 dependencies {
-  implementation('org.codehaus.groovy:groovy-all:3.0.8')
+  implementation(localGroovy())
 
-  testImplementation('org.junit.jupiter:junit-jupiter-api:5.7.2')
-  testImplementation('org.spockframework:spock-core:2.0-groovy-3.0')
-
-  testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.7.2')
+  testImplementation(gradleTestKit())
 }
 
 gradlePlugin {
@@ -46,6 +42,8 @@ gradlePlugin {
     strictNullCheck {
       id = 'com.github.joselion.strict-null-check'
       implementationClass = 'com.github.joselion.strictnullcheck.StrictNullCheckPlugin'
+      displayName = 'Strict Null Check Plugin'
+      description = 'A Gradle plugin to add full Strict Null Check to your Java code'
     }
   }
 }
@@ -53,37 +51,31 @@ gradlePlugin {
 pluginBundle {
   website = 'https://github.com/JoseLion/strict-null-check'
   vcsUrl = 'https://github.com/JoseLion/strict-null-check.git'
-  description = 'A Gradle plugin to add full Strict Null Check to your Java code'
   tags = ['nullability', 'strict-null', 'nonnull', 'null-check']
+}
 
-  plugins {
-    strictNullCheck {
-      displayName = 'Strict Null Check Plugin'
+testing {
+  suites {
+    test {
+      useSpock('2.2-M1-groovy-3.0')
+    }
+
+    e2e(JvmTestSuite) {
+      useSpock('2.2-M1-groovy-3.0')
+
+      dependencies {
+        implementation(project)
+      }
+
+      sources {
+        groovy {
+          srcDirs = ['src/2e2/groovy']
+        }
+      }
     }
   }
 }
 
-sourceSets {
-  e2e {
-  }
-}
-
-gradlePlugin.testSourceSets(sourceSets.e2e)
-configurations.e2eImplementation.extendsFrom(configurations.testImplementation)
-
-tasks.register('e2e', Test) {
-  testClassesDirs = sourceSets.e2e.output.classesDirs
-  classpath = sourceSets.e2e.runtimeClasspath
-}
-
 tasks.named('check') {
-  dependsOn(tasks.e2e)
-}
-
-test {
-  useJUnitPlatform()
-}
-
-e2e {
-  useJUnitPlatform()
+  dependsOn(testing.suites.e2e)
 }
