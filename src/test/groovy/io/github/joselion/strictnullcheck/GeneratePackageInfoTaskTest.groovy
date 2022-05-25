@@ -1,4 +1,4 @@
-package com.github.joselion.strictnullcheck
+package io.github.joselion.strictnullcheck
 
 import org.gradle.testfixtures.ProjectBuilder
 
@@ -19,7 +19,7 @@ class GeneratePackageInfoTaskTest extends Specification {
       }
 
     when:
-      def template = task.getPackageInfoTemplate('com.github.joselion.somepackage')
+      def template = task.getPackageInfoTemplate('io.github.joselion.somepackage')
 
     then:
       template == '''\
@@ -32,7 +32,7 @@ class GeneratePackageInfoTaskTest extends Specification {
         | */
         |@NonNullApi
         |@NonNullFields
-        |package com.github.joselion.somepackage;
+        |package io.github.joselion.somepackage;
         |
         |import org.springframework.lang.NonNullApi;
         |import org.springframework.lang.NonNullFields;
