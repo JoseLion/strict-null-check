@@ -1,45 +1,96 @@
 version: 2.1
 
 executors:
-  default-jvm:
+  default:
     working_directory: ~/repo/strict-null-check
-
     docker:
-      - image: cimg/openjdk:17.0.3
+      - image: cimg/base:stable
         environment:
-          JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF-8
           JVM_OPTS: -Xmx4096m
           TERM: dumb
+    resource_class: large
 
 commands:
+  install-jdk:
+    description: Install and setup the JDK environmnet
+    parameters:
+      major:
+        description: The JDK major version to use
+        type: string
+        default: "17"
+      version:
+        description: The JDK full version to use
+        type: string
+        default: "17.0.3"
+
+    steps:
+      - run:
+          name: Get JDK SHA256
+          command: |
+            mkdir ~/jdk
+            wget "https://download.oracle.com/java/<<parameters.major>>/archive/jdk-<<parameters.version>>_linux-x64_bin.tar.gz.sha256" -O ~/jdk/jdk-<<parameters.major>>.sha256
+      - restore_cache:
+          key: v1-<<parameters.major>>-{{ checksum "~/jdk/jdk-<<parameters.major>>.sha256" }}
+
+      - run:
+          name: Download JDK
+          command: |
+            if [ ! -f ~/jdk/jdk-<<parameters.major>>.tar.gz ]; then
+              wget -nc https://download.oracle.com/java/<<parameters.major>>/archive/jdk-<<parameters.version>>_linux-x64_bin.tar.gz -O ~/jdk/jdk-<<parameters.major>>.tar.gz
+            fi
+      - run:
+          name: Install JDK
+          command: |
+            sudo tar xvf ~/jdk/jdk-<<parameters.major>>.tar.gz -C ~/jdk/
+            sudo mkdir /opt/jdk-<<parameters.major>>
+            sudo mv ~/jdk/jdk-<<parameters.major>>*/* /opt/jdk-<<parameters.major>>
+            echo 'export JAVA_HOME=/opt/jdk-<<parameters.major>>' >> $BASH_ENV
+            echo 'export PATH=$PATH:$JAVA_HOME/bin' >> $BASH_ENV
+            source $BASH_ENV
+      - run:
+          name: Check Java version
+          command: |
+            echo $JAVA_HOME
+            java --version
+      - save_cache:
+          paths:
+            - ~/jdk/jdk-<<parameters.major>>.tar.gz
+          key: v1-<<parameters.major>>-{{ checksum "~/jdk/jdk-<<parameters.major>>.sha256" }}
+
   setup:
-    description: "Setup the environment to run tasks on CI"
+    description: Setup the environment to run tasks on CI
 
     steps:
       - checkout:
           path: ~/repo/strict-null-check
 
+      - run:
+          name: Provisioning
+          command: |
+            sed -i "s/{GRADLE_PUBLISH_KEY}/$GRADLE_PUBLISH_KEY/g" gradle.properties
+            sed -i "s/{GRADLE_PUBLISH_SECRET}/$GRADLE_PUBLISH_SECRET/g" gradle.properties
+
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "buildscript-gradle.lockfile" }}-{{ checksum "gradle.lockfile" }}
-            - v1-dependencies-{{ checksum "buildscript-gradle.lockfile" }}-
-            - v1-dependencies-
+            - v2-dependencies-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}-{{ checksum "buildscript-gradle.lockfile" }}-{{ checksum "gradle.lockfile" }}
 
-  store-cache:
-    description: "Store Gradle configuration and dependendies in cache"
+      - run:
+          name: Dependencies
+          command: ./gradlew dependencies
 
-    steps:
       - save_cache:
           paths:
             - ~/repo/strict-null-check/.gradle
             - ~/.gradle
-          key: v1-dependencies-{{ checksum "buildscript-gradle.lockfile" }}-{{ checksum "gradle.lockfile" }}
+          key: v2-dependencies-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}-{{ checksum "buildscript-gradle.lockfile" }}-{{ checksum "gradle.lockfile" }}
 
 jobs:
   build:
-    executor: default-jvm
+    executor: default
 
     steps:
+      - install-jdk
+
       - setup
 
       - run:
@@ -62,12 +113,12 @@ jobs:
           name: Build
           command: ./gradlew build
 
-      - store-cache
-
   publish:
-    executor: default-jvm
+    executor: default
 
     steps:
+      - install-jdk
+
       - setup
 
       - run:
@@ -76,9 +127,7 @@ jobs:
 
       - run:
           name: Publish plugin
-          command: ./gradlew publishPlugins -Pgradle.publish.key=$GRADLE_PUBLISH_KEY -Pgradle.publish.secret=$GRADLE_PUBLISH_SECRET
-      
-      - store-cache
+          command: ./gradlew publishPlugins
 
 workflows:
   main:
