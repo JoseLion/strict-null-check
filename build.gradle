@@ -9,8 +9,8 @@ plugins {
   id 'groovy'
   id 'java-gradle-plugin'
 
-  id 'com.gradle.plugin-publish' version '1.0.0-rc-2'
-  id 'io.github.joselion.pretty-jupiter' version '2.0.1'
+  id 'com.gradle.plugin-publish' version '1.1.0'
+  id 'io.github.joselion.pretty-jupiter' version '2.2.0'
 }
 
 group = 'io.github.joselion'
@@ -19,7 +19,7 @@ targetCompatibility = JavaVersion.VERSION_1_8
 
 codenarc {
   reportFormat('console')
-  toolVersion('3.0.1')
+  toolVersion('3.1.0')
 }
 
 repositories {
@@ -36,14 +36,25 @@ dependencies {
   testImplementation(gradleTestKit())
 }
 
-gradlePlugin {
-  plugins {
-    strictNullCheck {
-      id = 'io.github.joselion.strict-null-check'
-      implementationClass = 'io.github.joselion.strictnullcheck.StrictNullCheckPlugin'
-      displayName = 'Strict Null Check Plugin'
-      description = 'A Gradle plugin to add full Strict Null Check to your Java code'
-    }
+testing {
+  suites {
+    def applySpock = { suite -> suite.useSpock('2.4-M1-groovy-3.0') }
+
+    test(applySpock)
+    e2e(JvmTestSuite, applySpock)
+  }
+}
+
+tasks.named('check') {
+  dependsOn(testing.suites.e2e)
+}
+
+prettyJupiter {
+  duration {
+    customThreshold = [
+      test: 75,
+      e2e: 200
+    ]
   }
 }
 
@@ -53,28 +64,15 @@ pluginBundle {
   tags = ['nullability', 'strict-null', 'nonnull', 'null-check']
 }
 
-testing {
-  suites {
-    test {
-      useSpock('2.2-M1-groovy-3.0')
-    }
-
-    e2e(JvmTestSuite) {
-      useSpock('2.2-M1-groovy-3.0')
-
-      dependencies {
-        implementation(project)
-      }
-
-      sources {
-        groovy {
-          srcDirs = ['src/2e2/groovy']
-        }
-      }
+gradlePlugin {
+  plugins {
+    strictNullCheck {
+      id = 'io.github.joselion.strict-null-check'
+      implementationClass = 'io.github.joselion.strictnullcheck.StrictNullCheckPlugin'
+      displayName = 'Strict Null Check Plugin'
+      description = 'A Gradle plugin to add full Strict Null Check to your Java code'
     }
   }
-}
 
-tasks.named('check') {
-  dependsOn(testing.suites.e2e)
+  testSourceSets(sourceSets.e2e)
 }
