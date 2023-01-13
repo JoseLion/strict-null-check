@@ -1,7 +1,14 @@
-# Strict Null Check Plugin
-A Gradle plugin to add full **Strict Null Check** to your Java code ☕
+[![JoseLion](https://circleci.com/gh/JoseLion/strict-null-check.svg?style=shield)](https://app.circleci.com/pipelines/github/JoseLion/strict-null-check)
+[![Gradle Plugin](https://img.shields.io/gradle-plugin-portal/v/io.github.joselion.strict-null-check)](https://plugins.gradle.org/plugin/io.github.joselion.strict-null-check)
+[![License](https://img.shields.io/github/license/JoseLion/strict-null-check)](./LICENSE)
+[![Snyk Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/github/JoseLion/strict-null-check)](https://snyk.io/)
+
+# Strict Null Check
+
+A Gradle plugin to make your Java ☕ code check for **nullability** by default
 
 ## How it works
+
 The `strict-null-check` plugin leverages _possible_ implementations of JSR-305 to add package-level annotations to your project that can add a non-null behavior to all variables, parameters, fields, etc. So in simple words, the plugin will automatically create all the `package-info.java` files for you with the configured annotation(s). And that's it! You can have strict null checks in java without ever worrying about creating all the `package-info.java` files for all your project packages.
 
 Although, it's important to take into account that:
@@ -10,6 +17,7 @@ Although, it's important to take into account that:
 * The plugin adds FindBug's JSR-305 as a `compileOnly` dependency. The version can be configured through the plugin's extension
 
 ## Requirements
+
 * The [Java Plugin](https://docs.gradle.org/current/userguide/java_plugin.html) is required to:
   - Find the `classes` task
   - Find the `compileOnly` configuration
@@ -21,7 +29,8 @@ plugins {
 ```
 
 ## Usage
-> **⚠️ BREAKING CHANGES**
+
+> **⚠️ BREAKING CHANGES ⚠️**
 >
 > Due to changes on GitHub, and by consequence Gradle and Maven, it's no longer allowed to use `com.github` as a valid group ID prefix. That being said, from version v2.0.0 of the plugin the ID is now `io.github.joselion.strict-null-check`. If you want to use a version prior to v2.0.0 you can still find it under `com.github.joselion.strict-null-check`, but keep in mind that the `io.github` prefixed ID does not have any v1.x.x version available.
 
@@ -55,7 +64,8 @@ With the plugin applied, run `./gradlew classes` and the `package-info.java` fil
 
 **Note**: Running `./gradlew build` will also do the trick since the `build` task depends on the `compileJava` task, which depends on the `classes` task.
 
-## Extension
+### Extension
+
 The default extension configuration looks like this:
 ```gradle
 strictNullCheck {
@@ -69,6 +79,7 @@ strictNullCheck {
 ```
 
 ### Extension properties
+
 | Property                    | Default                                           | Description |
 | --------------------------- | :-----------------------------------------------: | ----------- |
 | annotation                  | `['org.eclipse.jdt.annotation.NonNullByDefault']` | List of fully qualified class names of the annotations to add to all the generated `package-info.java` files |
@@ -80,6 +91,7 @@ strictNullCheck {
 | useSpring                   | -                                                 | A shortcut function to use Spring's null-safety annotation |
 
 ### The `useSpring()` shortcut
+
 This function can be called inside the `strictNullCheck` closure as a shortcut to set Spring's null-safety annotations in the extension configuration. That is, setting:
 ```gradle
 strictNullCheck {
@@ -98,15 +110,19 @@ strictNullCheck {
 ```
 
 ### Tasks
+
 The plugin adds a task named `generatePackageInfo`. So if you want, you could also run `./gradlew generatePackageInfo` instead of running the `classes` task.
 
 ## Something's missing?
+
 Please create an [issue](https://github.com/JoseLion/strict-null-check/issues/new) describing your request, feature, or bug. I'll try to look into it as soon as possible 🙂
 
 ## Contributions
+
 Contributions are very welcome! To do so, please fork this repository and open a Pull Request to the `main` branch.
 
 ## License
+
 [Apache License 2.0](LICENSE)
 
 [1]: https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305
