@@ -20,7 +20,21 @@ class StrictNullCheckPluginE2E extends Specification {
         |}
         |
         |repositories {
-        |  jcenter()
+        |  mavenCentral()
+        |}
+      |'''
+      .stripMargin()
+      new File('build/e2e/src/main/java/com/example/app').mkdirs()
+      new File('build/e2e/src/test/java/com/example/app').mkdirs()
+      def mainJava = new File('build/e2e/src/main/java/com/example/app/MainApp.java')
+      mainJava.bytes = []
+      mainJava << '''\
+        |package com.example.app;
+        |
+        |public class MainApp {
+        |
+        |  public static void main(String[] args) {
+        |  }
         |}
       |'''
       .stripMargin()
@@ -35,6 +49,20 @@ class StrictNullCheckPluginE2E extends Specification {
 
     then:
       result.output.contains('BUILD SUCCESSFUL')
+      new File('build/e2e/build/generated/sources/strictNullCheck/java/main/com/example/app/package-info.java').getText() >> '''\
+        |/**
+        |* This package is checked for {@code null} by the following annotations:
+        |* <ul>
+        |*   <li>org.eclipse.jdt.annotation.NonNullByDefault</li>
+        |* </ul>
+        |*/
+        |@NonNullByDefault1
+        |package com.example.app;
+        |
+        |import org.eclipse.jdt.annotation.NonNullByDefault;
+      |'''
+      .stripMargin()
+
   }
 
   def 'can configure the plugin extension'() {
@@ -51,7 +79,7 @@ class StrictNullCheckPluginE2E extends Specification {
         |}
         |
         |repositories {
-        |  jcenter()
+        |  mavenCentral()
         |}
         |
         |strictNullCheck {
@@ -96,7 +124,7 @@ class StrictNullCheckPluginE2E extends Specification {
         |}
         |
         |repositories {
-        |  jcenter()
+        |  mavenCentral()
         |}
         |
         |strictNullCheck {
@@ -142,7 +170,7 @@ class StrictNullCheckPluginE2E extends Specification {
         |}
         |
         |repositories {
-        |  jcenter()
+        |  mavenCentral()
         |}
         |
         |strictNullCheck {
