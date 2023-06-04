@@ -9,8 +9,8 @@ plugins {
   id 'groovy'
   id 'java-gradle-plugin'
 
-  id 'com.gradle.plugin-publish' version '1.1.0'
-  id 'io.github.joselion.pretty-jupiter' version '2.2.0'
+  id 'com.gradle.plugin-publish' version '1.2.0'
+  id 'io.github.joselion.pretty-jupiter' version '2.2.1'
 }
 
 group = 'io.github.joselion'
@@ -19,7 +19,7 @@ targetCompatibility = JavaVersion.VERSION_1_8
 
 codenarc {
   reportFormat('console')
-  toolVersion('3.1.0')
+  toolVersion('3.2.0')
 }
 
 repositories {
@@ -38,7 +38,7 @@ dependencies {
 
 testing {
   suites {
-    def applySpock = { suite -> suite.useSpock('2.4-M1-groovy-3.0') }
+    def applySpock = { it.useSpock('2.4-M1-groovy-3.0') }
 
     test(applySpock)
     e2e(JvmTestSuite, applySpock)
@@ -58,19 +58,24 @@ prettyJupiter {
   }
 }
 
-pluginBundle {
-  website = 'https://github.com/JoseLion/strict-null-check'
-  vcsUrl = 'https://github.com/JoseLion/strict-null-check.git'
-  tags = ['nullability', 'strict-null', 'nonnull', 'null-check']
-}
-
 gradlePlugin {
+  website = 'https://github.com/JoseLion/strict-null-check'
+  vcsUrl = 'https://github.com/JoseLion/strict-null-check'
+
   plugins {
     strictNullCheck {
       id = 'io.github.joselion.strict-null-check'
       implementationClass = 'io.github.joselion.strictnullcheck.StrictNullCheckPlugin'
       displayName = 'Strict Null Check Plugin'
       description = 'A Gradle plugin to add full Strict Null Check to your Java code'
+      tags.set([
+        'nullability',
+        'strict-null',
+        'nonnull',
+        'null-check',
+        'non-null-by-default',
+        'package-info-generation',
+      ])
     }
   }
 
