@@ -41,6 +41,7 @@ class GeneratePackageInfoTask extends DefaultTask {
     project.extensions.getByType(SourceSetContainer).all { sourceSet ->
       sourceSet.getAllJava().getSrcDirs()
         .grep { dir -> !dir.path.startsWith(getGeneratedDir().path) }
+        .grep { dir -> new File("$dir/package-info.java").exists() }
         .each { dir ->
           dir.eachFileRecurse(FileType.FILES) {
             def matcher = it.text =~ 'package (.+);'
