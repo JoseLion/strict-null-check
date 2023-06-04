@@ -109,6 +109,31 @@ strictNullCheck {
 }
 ```
 
+### Overriding package-info.java
+
+Having more than one `package-info.java` file on the same package classpath may cause issues during compilation. To avoid this kind of issues, the plugin will not generate a `package-info.java` file if it already exists. This is also convenient if you'd like to override the annotations on a specific package.
+
+The only pitfall of this behavior is that you might need to clean the `build/` folder if a `package-info.java` file was generated on a previous run. Also, if you just want to add more annotations to the package aside from the nullability annotations the plugin adds, you'll have to add the extra annotations, plus the nullability annotation. For example:
+```sh
+./gradlew clean
+```
+
+Now we overide a `package-info.java` file.
+```java
+// We add an extra annotation
+@Deprecated
+// But we want to keep the nullability annotations for this package
+@NonNullApi
+@NonNullFields
+package com.acme.app;
+
+import java.lang.Deprecated;
+
+import org.springframework.lang.NonNullApi;
+import org.springframework.lang.NonNullFields;
+```
+
+
 ### Tasks
 
 The plugin adds a task named `generatePackageInfo`. So if you want, you could also run `./gradlew generatePackageInfo` instead of running the `classes` task.

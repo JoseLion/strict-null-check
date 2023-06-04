@@ -38,7 +38,7 @@ dependencies {
 
 testing {
   suites {
-    def applySpock = { it.useSpock('2.4-M1-groovy-3.0') }
+    def applySpock = { suite -> suite.useSpock('2.4-M1-groovy-3.0') }
 
     test(applySpock)
     e2e(JvmTestSuite, applySpock)
