@@ -41,13 +41,18 @@ class GeneratePackageInfoTask extends DefaultTask {
     project.extensions.getByType(SourceSetContainer).all { sourceSet ->
       sourceSet.getAllJava().getSrcDirs()
         .grep { dir -> !dir.path.startsWith(getGeneratedDir().path) }
-        .grep { dir -> new File("$dir/package-info.java").exists() }
         .each { dir ->
-          dir.eachFileRecurse(FileType.FILES) {
-            def matcher = it.text =~ 'package (.+);'
+          dir.eachDirRecurse { subDir ->
+            def packageInfoOverride = new File("$subDir/package-info.java")
 
-            if (it.name.endsWith('.java') && matcher.find()) {
-              packages << matcher.group(1)
+            if (!packageInfoOverride.exists()) {
+              subDir.eachFile(FileType.FILES) { file ->
+                def matcher = file.text =~ 'package (.+);'
+
+                if (file.name.endsWith('.java') && matcher.find()) {
+                  packages << matcher.group(1)
+                }
+              }
             }
           }
         }
