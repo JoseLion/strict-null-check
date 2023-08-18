@@ -41,6 +41,8 @@ jobs:
       - run: ./gradlew build
       - run: yarn install --immutable
       - run: yarn release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   pages:
     uses: ./.github/workflows/pages.yml
