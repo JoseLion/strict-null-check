@@ -1,7 +1,9 @@
-[![JoseLion](https://circleci.com/gh/JoseLion/strict-null-check.svg?style=shield)](https://app.circleci.com/pipelines/github/JoseLion/strict-null-check)
-[![Gradle Plugin](https://img.shields.io/gradle-plugin-portal/v/io.github.joselion.strict-null-check)](https://plugins.gradle.org/plugin/io.github.joselion.strict-null-check)
+[![CI](https://github.com/JoseLion/strict-null-check/actions/workflows/ci.yml/badge.svg)](https://github.com/JoseLion/strict-null-check/actions/workflows/ci.yml)
+[![Release](https://github.com/JoseLion/strict-null-check/actions/workflows/release.yml/badge.svg)](https://github.com/JoseLion/strict-null-check/actions/workflows/release.yml)
+[![Pages](https://github.com/JoseLion/strict-null-check/actions/workflows/pages.yml/badge.svg)](https://github.com/JoseLion/strict-null-check/actions/workflows/pages.yml)
+[![Gradle Plugin](https://img.shields.io/gradle-plugin-portal/v/io.github.joselion.strict-null-check?logo=gradle)](https://plugins.gradle.org/plugin/io.github.joselion.strict-null-check)
 [![License](https://img.shields.io/github/license/JoseLion/strict-null-check)](./LICENSE)
-[![Snyk Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/github/JoseLion/strict-null-check)](https://snyk.io/)
+[![Known Vulnerabilities](https://snyk.io/test/github/JoseLion/strict-null-check/badge.svg)](https://snyk.io/test/github/JoseLion/strict-null-check)
 
 # Strict Null Check
 
