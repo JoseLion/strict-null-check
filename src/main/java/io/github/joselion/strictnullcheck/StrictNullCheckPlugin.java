@@ -1,10 +1,9 @@
 package io.github.joselion.strictnullcheck;
 
-import java.util.List;
-
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.plugins.JavaPlugin;
+import org.gradle.api.tasks.SourceSet;
 import org.gradle.api.tasks.SourceSetContainer;
 
 import io.github.joselion.strictnullcheck.lib.GeneratePackageInfoTask;
@@ -17,18 +16,9 @@ public class StrictNullCheckPlugin implements Plugin<Project> {
     final var extension = project.getExtensions().create("strictNullCheck", StrictNullCheckExtension.class);
 
     project.getPlugins().withType(JavaPlugin.class).configureEach(plugin -> {
-      final var configuration = project.getConfigurations().getByName("compileOnly");
-      final var findbugsVersion = extension.getVersions().getFindBugs().get();
-      final var eclipseVersion = extension.getVersions().getEclipseAnnotations().get();
-
-      configuration.getDependencies().addAll(
-        List.of(
-          project.getDependencies().create("com.google.code.findbugs:jsr305:".concat(findbugsVersion)),
-          project.getDependencies().create("org.eclipse.jdt:org.eclipse.jdt.annotation:".concat(eclipseVersion))
-        )
-      );
-
-      final var generateTask = project.getTasks().register("generatePackageInfo", GeneratePackageInfoTask.class);
+      final var generateTask = project
+        .getTasks()
+        .register("generatePackageInfo", GeneratePackageInfoTask.class);
 
       project.getTasks().getByName(
         JavaPlugin.COMPILE_JAVA_TASK_NAME,
@@ -41,12 +31,34 @@ public class StrictNullCheckPlugin implements Plugin<Project> {
         }
       });
 
+
       project
         .getExtensions()
         .getByType(SourceSetContainer.class)
-        .getByName("main")
-        .getAllJava()
-        .srcDir(extension.getGeneratedDir().get().concat("/java/main"));
+        .getByName(SourceSet.MAIN_SOURCE_SET_NAME, sourceSet ->
+          sourceSet
+            .getJava()
+            .srcDir(extension.getGeneratedDir().get().concat("/java/main"))
+        );
+    });
+
+    project.afterEvaluate(evaluated -> {
+      final var allCompileOnly = evaluated
+        .getConfigurations()
+        .matching(configuration -> {
+          final var name = configuration.getName();
+          return name.startsWith("compileOnly") || name.endsWith("CompileOnly");
+        });
+
+      allCompileOnly.configureEach(configuration ->
+        extension
+          .getSource()
+          .getDependencies()
+          .get()
+          .stream()
+          .map(evaluated.getDependencies()::create)
+          .forEach(configuration.getDependencies()::add)
+      );
     });
   }
 }

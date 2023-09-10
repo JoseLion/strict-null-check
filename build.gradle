@@ -31,6 +31,7 @@ tasks.withType(JavaCompile) {
   options.compilerArgs << '-Xlint:unchecked'
   options.deprecation = true
 }
+
 dependencyLocking {
   lockAllConfigurations()
 }
@@ -102,6 +103,9 @@ testing {
 }
 
 prettyJupiter {
+  failure {
+    maxMessageLines = 30
+  }
   duration {
     customThreshold = [testkit: 1000]
   }

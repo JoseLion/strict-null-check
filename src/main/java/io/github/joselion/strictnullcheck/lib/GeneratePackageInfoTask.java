@@ -16,9 +16,6 @@ import javax.inject.Inject;
 
 import org.gradle.api.DefaultTask;
 import org.gradle.api.Project;
-import org.gradle.api.provider.ListProperty;
-import org.gradle.api.provider.Property;
-import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.InputFiles;
 import org.gradle.api.tasks.Internal;
 import org.gradle.api.tasks.OutputDirectory;
@@ -32,30 +29,16 @@ import lombok.Getter;
 @Getter
 public class GeneratePackageInfoTask extends DefaultTask {
 
-  @Input
-  private final ListProperty<String> annotations;
-
-  @Input
-  private final Property<String> outputDir;
-
-  @Input
-  private final Property<String> packageJavadoc;
-
   @Internal
   private final Project project;
 
+  @Internal
+  private final StrictNullCheckExtension extension;
+
   @Inject
   public GeneratePackageInfoTask(final Project project) {
-    final var extension = project.getExtensions().getByType(StrictNullCheckExtension.class);
-
-    this.annotations = project.getObjects().listProperty(String.class);
-    this.outputDir = project.getObjects().property(String.class);
-    this.packageJavadoc = project.getObjects().property(String.class);
     this.project = project;
-
-    this.annotations.convention(extension.getAnnotations());
-    this.outputDir.convention(extension.getGeneratedDir());
-    this.packageJavadoc.convention(extension.getPackageJavadoc());
+    this.extension = project.getExtensions().getByType(StrictNullCheckExtension.class);
   }
 
   @InputFiles
@@ -84,7 +67,13 @@ public class GeneratePackageInfoTask extends DefaultTask {
 
   @OutputDirectory
   public File getGeneratedDir() {
-    return new File(this.outputDir.get());
+    final var outputDir = this.project
+      .getExtensions()
+      .getByType(StrictNullCheckExtension.class)
+      .getGeneratedDir()
+      .get();
+
+    return new File(outputDir);
   }
 
   @TaskAction
@@ -117,16 +106,24 @@ public class GeneratePackageInfoTask extends DefaultTask {
   }
 
   private String getPackageInfoTemplate(final String packageName) {
-    final var javadoc = this.buildPackageJavadoc();
-    final var annotationLines = this.annotations
-      .get()
+    final var packageInfo = this.extension.getPackageInfo();
+    final var annotations = packageInfo.getAnnotations().get();
+    final var imports = packageInfo.getImports().get();
+    final var javadocComment = this.buildJavadocComment();
+    final var annotationLines = annotations.stream().collect(joining("\n"));
+    final var staticImports = imports
       .stream()
-      .map(this::cannonicalToAnnotation)
+      .sequential()
+      .filter(it -> it.contains("static "))
+      .map(it -> "import ".concat(it).concat(";"))
       .collect(joining("\n"));
-    final var importLines = this.annotations
-      .get()
+    final var staticImportLines = staticImports.isBlank()
+      ? staticImports
+      : staticImports.concat("\n\n");
+    final var importLines = imports
       .stream()
-      .map(this::cannonicalToImport)
+      .filter(it -> !it.contains("static "))
+      .map(it -> "import ".concat(it).concat(";"))
       .collect(joining("\n"));
 
     return """
@@ -134,24 +131,32 @@ public class GeneratePackageInfoTask extends DefaultTask {
       %s
       package %s;
 
-      %s
+      %s%s
       """
       .formatted(
-        javadoc,
+        javadocComment,
         annotationLines,
         packageName,
+        staticImportLines,
         importLines
       );
   }
 
-  private String buildPackageJavadoc() {
-    final var annotationList = this.annotations
+  private String buildJavadocComment() {
+    final var packageInfo = this.extension.getPackageInfo();
+    final var imports = packageInfo.getImports().get();
+    final var javadoc = packageInfo.getJavadoc().get();
+    final var annotations = packageInfo
+      .getAnnotations()
       .get()
       .stream()
+      .map(it -> it.replace("@", ""))
+      .map(it -> it.contains("(") ? it.substring(0, it.indexOf("(")) : it)
+      .map(it -> imports.stream().filter(imp -> imp.contains(it)).findFirst().orElse(it))
       .map(it -> " *   <li>".concat(it).concat("</li>"))
       .collect(joining("\n"));
-    final var javadoc = !this.packageJavadoc.get().isEmpty()
-      ? "\n *\n".concat(stream(this.packageJavadoc.get().split("\n")).map(" * "::concat).collect(joining("\n")))
+    final var javadocText = !javadoc.isEmpty()
+      ? "\n *\n".concat(stream(javadoc.split("\n")).map(" * "::concat).collect(joining("\n")))
       : "";
 
     return """
@@ -163,19 +168,8 @@ public class GeneratePackageInfoTask extends DefaultTask {
        */\
       """
       .formatted(
-        annotationList,
-        javadoc
+        annotations,
+        javadocText
       );
-  }
-
-  private String cannonicalToAnnotation(final String cannonical) {
-    final var names = cannonical.split("\\.");
-    final var last = names[names.length - 1];
-
-    return "@".concat(last);
-  }
-
-  private String cannonicalToImport(final String cannonical) {
-    return "import ".concat(cannonical).concat(";");
   }
 }

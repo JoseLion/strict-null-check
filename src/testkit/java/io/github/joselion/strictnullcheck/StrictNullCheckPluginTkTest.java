@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import testing.Helpers;
 import testing.annotations.TestkitTest;
 
-@TestkitTest class StrictNullCheckPluginTest {
+@TestkitTest class StrictNullCheckPluginTkTest {
 
   @Nested class when_the_plugin_is_applied {
     @Test void generates_package_info_files_before_compileJava_task() throws IOException {
@@ -21,6 +21,12 @@ import testing.annotations.TestkitTest;
         plugins {
           id "java"
           id "io.github.joselion.strict-null-check"
+        }
+
+        strictNullCheck {
+          source {
+            addFindBugs()
+          }
         }
 
         repositories {
@@ -37,13 +43,13 @@ import testing.annotations.TestkitTest;
         /**
          * This package is checked for {@code null} by the following annotations:
          * <ul>
-         *   <li>org.eclipse.jdt.annotation.NonNullByDefault</li>
+         *   <li>javax.annotation.ParametersAreNonnullByDefault</li>
          * </ul>
          */
-        @NonNullByDefault
+        @ParametersAreNonnullByDefault
         package com.example.app;
 
-        import org.eclipse.jdt.annotation.NonNullByDefault;
+        import javax.annotation.ParametersAreNonnullByDefault;
         """
       );
     }
@@ -60,11 +66,12 @@ import testing.annotations.TestkitTest;
           }
 
           strictNullCheck {
-            annotations = [
+            packageInfo.annotations = [
               'my.custom.annotation.NullApi',
-              'my.custom.annotation.NullFields'
+              'my.custom.annotation.NullFields',
             ]
-            versions.findBugs = '1.0.0';
+            source.dependencies = ['my.custom:annotations:1.5.3']
+            source.addFindBugs()
           }
 
           repositories {
@@ -73,8 +80,8 @@ import testing.annotations.TestkitTest;
 
           task showConfig() {
             doLast {
-              println("*** annotations: ${strictNullCheck.annotations.get()}")
-              println("*** versions.findBugs: ${strictNullCheck.versions.findBugs.get()}")
+              println("*** packageInfo.annotations: ${strictNullCheck.packageInfo.annotations.get()}")
+              println("*** source.dependencies: ${strictNullCheck.source.dependencies.get()}")
             }
           }
           """
@@ -83,8 +90,8 @@ import testing.annotations.TestkitTest;
         final var result = Helpers.runTask("showConfig");
 
         assertThat(result.getOutput())
-          .contains("*** annotations: [my.custom.annotation.NullApi, my.custom.annotation.NullFields]")
-          .contains("*** versions.findBugs: 1.0.0")
+          .contains("*** packageInfo.annotations: [my.custom.annotation.NullApi, my.custom.annotation.NullFields]")
+          .contains("*** source.dependencies: [my.custom:annotations:1.5.3, com.google.code.findbugs:jsr305:+]")
           .contains("BUILD SUCCESSFUL");
       }
     }
@@ -99,9 +106,15 @@ import testing.annotations.TestkitTest;
           }
 
           strictNullCheck {
-            versions {
-              eclipseAnnotations = '1.1.000'
-              findBugs = '1.0.0'
+            packageInfo {
+              annotations = [
+                'my.custom.annotation.NullApi',
+                'my.custom.annotation.NullFields',
+              ]
+            }
+            source {
+              dependencies = ['my.custom:annotations:1.5.3']
+              addFindBugs()
             }
           }
 
@@ -111,8 +124,8 @@ import testing.annotations.TestkitTest;
 
           task showConfig() {
             doLast {
-              println("*** varsions.eclipseAnnotations: ${strictNullCheck.versions.eclipseAnnotations.get()}")
-              println("*** versions.findBugs: ${strictNullCheck.versions.findBugs.get()}")
+              println("*** packageInfo.annotations: ${strictNullCheck.packageInfo.annotations.get()}")
+              println("*** source.dependencies: ${strictNullCheck.source.dependencies.get()}")
             }
           }
           """
@@ -121,8 +134,8 @@ import testing.annotations.TestkitTest;
         final var result = Helpers.runTask("showConfig");
 
         assertThat(result.getOutput())
-          .contains("*** varsions.eclipseAnnotations: 1.1.000")
-          .contains("*** versions.findBugs: 1.0.0")
+          .contains("*** packageInfo.annotations: [my.custom.annotation.NullApi, my.custom.annotation.NullFields]")
+          .contains("*** source.dependencies: [my.custom:annotations:1.5.3, com.google.code.findbugs:jsr305:+]")
           .contains("BUILD SUCCESSFUL");
       }
     }

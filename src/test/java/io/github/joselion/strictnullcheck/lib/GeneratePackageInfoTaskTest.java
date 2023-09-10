@@ -21,21 +21,6 @@ import testing.annotations.UnitTest;
 
 @UnitTest class GeneratePackageInfoTaskTest {
 
-  @Nested class when_the_task_is_created {
-    @Test void assigns_default_values() {
-      final var project = ProjectBuilder.builder().build();
-      final var extension = project.getExtensions().create("strictNullCheck", StrictNullCheckExtension.class);
-      final var defaultAnnotations = extension.getAnnotations().get();
-      final var defaultGeneratedDir = extension.getGeneratedDir().get();
-      final var defaultJavadoc = extension.getPackageJavadoc().get();
-      final var task = project.getTasks().create("generatePackageInfo", GeneratePackageInfoTask.class);
-
-      assertThat(task.getAnnotations().get()).isEqualTo(defaultAnnotations);
-      assertThat(task.getOutputDir().get()).isEqualTo(defaultGeneratedDir);
-      assertThat(task.getPackageJavadoc().get()).isEqualTo(defaultJavadoc);
-    }
-  }
-
   @Nested class getSourcePackages {
     @Nested class when_the_project_has_no_source_sets {
       @Test void returns_an_empty_set() {
@@ -51,7 +36,11 @@ import testing.annotations.UnitTest;
     @Test void returns_a_file_using_the_outputDir_path() {
       final var project = prepareProject();
       final var task = project.getTasks().create("generatePackageInfo", GeneratePackageInfoTask.class);
-      final var outputDir = task.getOutputDir().get();
+      final var outputDir = project
+        .getExtensions()
+        .getByType(StrictNullCheckExtension.class)
+        .getGeneratedDir()
+        .get();
 
       assertThat(task.getGeneratedDir()).isEqualTo(new File(outputDir));
     }
@@ -68,8 +57,9 @@ import testing.annotations.UnitTest;
         task.generatePackageInfo();
 
         assertThat(packages).allSatisfy(packageName -> {
+          final var extension = project.getExtensions().getByType(StrictNullCheckExtension.class);
           final var path = Path.of(
-            task.getOutputDir().get(),
+            extension.getGeneratedDir().get(),
             "/java/main",
             packageName.replace(".", "/"),
             "package-info.java"
@@ -81,13 +71,13 @@ import testing.annotations.UnitTest;
             /**
              * This package is checked for {@code null} by the following annotations:
              * <ul>
-             *   <li>org.eclipse.jdt.annotation.NonNullByDefault</li>
+             *   <li>javax.annotation.ParametersAreNonnullByDefault</li>
              * </ul>
              */
-            @NonNullByDefault
+            @ParametersAreNonnullByDefault
             package %s;
 
-            import org.eclipse.jdt.annotation.NonNullByDefault;
+            import javax.annotation.ParametersAreNonnullByDefault;
             """,
             packageName
           );
@@ -95,13 +85,14 @@ import testing.annotations.UnitTest;
       }
     }
 
-    @Nested class when_annotations_are_provided {
-      @Test void generates_the_package_info_using_those_annotation() throws IOException {
+    @Nested class when_imports_are_provided {
+      @Test void generates_the_package_info_using_those_imports() throws IOException {
         final var project = prepareProject();
+        final var extension = project.getExtensions().getByType(StrictNullCheckExtension.class);
         final var task = spy(project.getTasks().create("generatePackageInfo", GeneratePackageInfoTask.class));
 
         when(task.getSourcePackages()).thenReturn(Set.of("com.test.foo"));
-        task.getAnnotations().set(
+        extension.getPackageInfo().getImports().set(
           List.of(
             "org.springframework.lang.NonNullApi",
             "org.springframework.lang.NonNullFields"
@@ -109,7 +100,86 @@ import testing.annotations.UnitTest;
         );
         task.generatePackageInfo();
 
-        final var path = Path.of(task.getOutputDir().get(), "/java/main/com/test/foo/package-info.java");
+        final var path = Path.of(extension.getGeneratedDir().get(), "/java/main/com/test/foo/package-info.java");
+        final var content = Files.readString(path);
+
+        assertThat(content).isEqualTo(
+          """
+          /**
+           * This package is checked for {@code null} by the following annotations:
+           * <ul>
+           *   <li>ParametersAreNonnullByDefault</li>
+           * </ul>
+           */
+          @ParametersAreNonnullByDefault
+          package com.test.foo;
+
+          import org.springframework.lang.NonNullApi;
+          import org.springframework.lang.NonNullFields;
+          """
+        );
+      }
+    }
+
+    @Nested class when_annotations_are_provided {
+      @Test void generates_the_package_info_using_those_annotation() throws IOException {
+        final var project = prepareProject();
+        final var extension = project.getExtensions().getByType(StrictNullCheckExtension.class);
+        final var task = spy(project.getTasks().create("generatePackageInfo", GeneratePackageInfoTask.class));
+
+        when(task.getSourcePackages()).thenReturn(Set.of("com.test.foo"));
+        extension.getPackageInfo().getAnnotations().set(
+          List.of(
+            "@NonNullApi",
+            "@NonNullFields"
+          )
+        );
+        task.generatePackageInfo();
+
+        final var path = Path.of(extension.getGeneratedDir().get(), "/java/main/com/test/foo/package-info.java");
+        final var content = Files.readString(path);
+
+        assertThat(content).isEqualTo(
+          """
+          /**
+           * This package is checked for {@code null} by the following annotations:
+           * <ul>
+           *   <li>NonNullApi</li>
+           *   <li>NonNullFields</li>
+           * </ul>
+           */
+          @NonNullApi
+          @NonNullFields
+          package com.test.foo;
+
+          import javax.annotation.ParametersAreNonnullByDefault;
+          """
+        );
+      }
+    }
+
+    @Nested class when_both_annotations_and_imports_are_provided {
+      @Test void matches_the_annotations_with_imports_in_the_javadoc_section() throws IOException {
+        final var project = prepareProject();
+        final var extension = project.getExtensions().getByType(StrictNullCheckExtension.class);
+        final var task = spy(project.getTasks().create("generatePackageInfo", GeneratePackageInfoTask.class));
+
+        when(task.getSourcePackages()).thenReturn(Set.of("com.test.foo"));
+        extension.getPackageInfo().getImports().set(
+          List.of(
+            "org.springframework.lang.NonNullApi",
+            "org.springframework.lang.NonNullFields"
+          )
+        );
+        extension.getPackageInfo().getAnnotations().set(
+          List.of(
+            "@NonNullApi",
+            "@NonNullFields"
+          )
+        );
+        task.generatePackageInfo();
+
+        final var path = Path.of(extension.getGeneratedDir().get(), "/java/main/com/test/foo/package-info.java");
         final var content = Files.readString(path);
 
         assertThat(content).isEqualTo(
@@ -135,10 +205,11 @@ import testing.annotations.UnitTest;
     @Nested class when_the_outputDir_is_provided {
       @Test void generates_the_package_info_in_that_directory() {
         final var project = prepareProject();
+        final var extension = project.getExtensions().getByType(StrictNullCheckExtension.class);
         final var task = spy(project.getTasks().create("generatePackageInfo", GeneratePackageInfoTask.class));
 
         when(task.getSourcePackages()).thenReturn(Set.of("com.test.foo"));
-        task.getOutputDir().set(
+        extension.getGeneratedDir().set(
           project
             .getLayout()
             .getBuildDirectory()
@@ -149,7 +220,7 @@ import testing.annotations.UnitTest;
         );
         task.generatePackageInfo();
 
-        final var path = Path.of(task.getOutputDir().get(), "/java/main/com/test/foo/package-info.java");
+        final var path = Path.of(extension.getGeneratedDir().get(), "/java/main/com/test/foo/package-info.java");
 
         assertThat(path).exists().isRegularFile();
       }
@@ -158,10 +229,11 @@ import testing.annotations.UnitTest;
     @Nested class when_the_packageJavadoc_is_provided {
       @Test void generates_the_package_info_with_that_javadoc() throws IOException {
         final var project = prepareProject();
+        final var extension = project.getExtensions().getByType(StrictNullCheckExtension.class);
         final var task = spy(project.getTasks().create("generatePackageInfo", GeneratePackageInfoTask.class));
 
         when(task.getSourcePackages()).thenReturn(Set.of("com.test.foo"));
-        task.getPackageJavadoc().set(
+        extension.getPackageInfo().getJavadoc().set(
           """
           @author JoseLion
           @since v1.1.0
@@ -169,7 +241,7 @@ import testing.annotations.UnitTest;
         );
         task.generatePackageInfo();
 
-        final var path = Path.of(task.getOutputDir().get(), "/java/main/com/test/foo/package-info.java");
+        final var path = Path.of(extension.getGeneratedDir().get(), "/java/main/com/test/foo/package-info.java");
         final var content = Files.readString(path);
 
         assertThat(content).isEqualTo(
@@ -177,16 +249,16 @@ import testing.annotations.UnitTest;
           /**
            * This package is checked for {@code null} by the following annotations:
            * <ul>
-           *   <li>org.eclipse.jdt.annotation.NonNullByDefault</li>
+           *   <li>javax.annotation.ParametersAreNonnullByDefault</li>
            * </ul>
            *
            * @author JoseLion
            * @since v1.1.0
            */
-          @NonNullByDefault
+          @ParametersAreNonnullByDefault
           package com.test.foo;
 
-          import org.eclipse.jdt.annotation.NonNullByDefault;
+          import javax.annotation.ParametersAreNonnullByDefault;
           """
         );
       }
