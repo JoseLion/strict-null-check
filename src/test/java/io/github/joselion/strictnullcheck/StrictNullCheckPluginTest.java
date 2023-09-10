@@ -14,7 +14,7 @@ import testing.annotations.UnitTest;
 @UnitTest class StrictNullCheckPluginTest {
 
   @Nested class when_the_plugin_is_applied {
-    @Test void creates_strictNullCheck_extension_and_registers_generatePackageInfo_task() {
+    @Test void creates_strictNullCheck_extension() {
       final var project = ProjectBuilder.builder().build();
       final var plugins = project.getPlugins();
 
@@ -22,11 +22,21 @@ import testing.annotations.UnitTest;
       plugins.apply("io.github.joselion.strict-null-check");
 
       final var extension = project.getExtensions().findByName("strictNullCheck");
-      final var generateTask = project.getTasks().findByName("generatePackageInfo");
 
       assertThat(extension)
         .isNotNull()
         .isInstanceOf(StrictNullCheckExtension.class);
+    }
+
+    @Test void registers_generatePackageInfo_task() {
+      final var project = ProjectBuilder.builder().build();
+      final var plugins = project.getPlugins();
+
+      plugins.apply("java");
+      plugins.apply("io.github.joselion.strict-null-check");
+
+      final var generateTask = project.getTasks().findByName("generatePackageInfo");
+
       assertThat(generateTask)
         .isNotNull()
         .isInstanceOf(GeneratePackageInfoTask.class);

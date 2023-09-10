@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 import testing.Helpers;
 import testing.annotations.TestkitTest;
 
-@TestkitTest class GeneratePackageInfoTaskTest {
+@TestkitTest class GeneratePackageInfoTaskTkTest {
 
   @Nested class when_the_task_runs {
     @Test void generates_package_info_file_if_they_dont_aready_exist() throws IOException {
@@ -23,6 +23,12 @@ import testing.annotations.TestkitTest;
         plugins {
           id "java"
           id "io.github.joselion.strict-null-check"
+        }
+
+        strictNullCheck {
+          source {
+            addFindBugs()
+          }
         }
 
         repositories {
