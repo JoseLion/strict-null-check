@@ -31,7 +31,6 @@ public class StrictNullCheckPlugin implements Plugin<Project> {
         }
       });
 
-
       project
         .getExtensions()
         .getByType(SourceSetContainer.class)
