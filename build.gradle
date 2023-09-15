@@ -10,7 +10,7 @@ plugins {
 
   id('com.gradle.plugin-publish') version '1.2.1'
   id('io.github.joselion.pretty-jupiter') version '3.0.1'
-  id('io.github.joselion.strict-null-check') version '2.3.0'
+  id('io.github.joselion.strict-null-check') version '3.0.0'
   id('se.solrike.sonarlint') version '1.0.0-beta.15'
 }
 
@@ -52,10 +52,8 @@ sonarlint {
 }
 
 strictNullCheck {
-  versions {
-    eclipseAnnotations = '2.2.700'
-    findBugs = '3.0.2'
-  }
+  packageInfo.useEclipse()
+  source.addEclipse()
 }
 
 repositories {
@@ -69,11 +67,6 @@ dependencies {
 
   implementation(localGroovy())
   implementation('io.github.joselion:maybe:3.2.0')
-
-  testAnnotationProcessor('org.projectlombok:lombok:1.18.28')
-  testCompileOnly('org.eclipse.jdt:org.eclipse.jdt.annotation:2.2.700')
-  testCompileOnly('org.projectlombok:lombok:1.18.28')
-  testImplementation('org.mockito:mockito-core:5.5.0')
 }
 
 testing {
@@ -82,7 +75,11 @@ testing {
       useJUnitJupiter('5.10.0')
 
       dependencies {
+        annotationProcessor('org.projectlombok:lombok:1.18.28')
+        compileOnly('org.projectlombok:lombok:1.18.28')
+
         implementation('org.assertj:assertj-core:3.24.2')
+        implementation('org.mockito:mockito-core:5.5.0')
       }
     }
 
@@ -128,6 +125,7 @@ gradlePlugin {
         'null-check',
         'non-null-by-default',
         'package-info-generation',
+        'sonarlint'
       ])
     }
   }
