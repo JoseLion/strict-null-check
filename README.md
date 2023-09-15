@@ -114,9 +114,9 @@ strictNullCheck {
 | packageInfo.useEclipse()    | -                                                  | Shorcut function to set Eclipse's imports and annotations |
 | source                      | -                                                  | Container to configure the source of the annotations/imports |
 | source.dependencies         | []                                                 | List of short-style dependencies to be added to all _compileOnly_ classpaths |
-| source.addFindBugs(version) | version = `+` (resolves to latest)                 | Shortcut function to add `com.google.code.findbugs:jsr305` dependency |
-| source.addSpotBugs(version) | version = `+` (resolves to latest)                 | Shortcut function to add `com.github.spotbugs:spotbugs-annotations` dependency |
-| source.addEclipse(version)  | version = `+` (resolves to latest)                 | Shortcut function to add `org.eclipse.jdt:org.eclipse.jdt.annotation` dependency |
+| source.addFindBugs(version) | version = `3.0.2`                                  | Shortcut function to add `com.google.code.findbugs:jsr305` dependency |
+| source.addSpotBugs(version) | version = `4.7.3`                                  | Shortcut function to add `com.github.spotbugs:spotbugs-annotations` dependency |
+| source.addEclipse(version)  | version = `2.2.700`                                | Shortcut function to add `org.eclipse.jdt:org.eclipse.jdt.annotation` dependency |
 
 ### Overriding package-info.java
 

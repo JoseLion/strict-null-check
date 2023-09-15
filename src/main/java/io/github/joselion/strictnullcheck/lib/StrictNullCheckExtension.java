@@ -131,7 +131,7 @@ public class StrictNullCheckExtension {
     }
 
     public void addFindBugs() {
-      this.addFindBugs("+");
+      this.addFindBugs("3.0.2");
     }
 
     public void addSpotBugs(final String version) {
@@ -139,7 +139,7 @@ public class StrictNullCheckExtension {
     }
 
     public void addSpotBugs() {
-      this.addSpotBugs("+");
+      this.addSpotBugs("4.7.3");
     }
 
     public void addEclipse(final String version) {
@@ -147,7 +147,7 @@ public class StrictNullCheckExtension {
     }
 
     public void addEclipse() {
-      this.addEclipse("+");
+      this.addEclipse("2.2.700");
     }
   }
 }
