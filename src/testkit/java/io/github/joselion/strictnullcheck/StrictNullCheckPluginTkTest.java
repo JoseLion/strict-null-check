@@ -91,7 +91,7 @@ import testing.annotations.TestkitTest;
 
         assertThat(result.getOutput())
           .contains("*** packageInfo.annotations: [my.custom.annotation.NullApi, my.custom.annotation.NullFields]")
-          .contains("*** source.dependencies: [my.custom:annotations:1.5.3, com.google.code.findbugs:jsr305:+]")
+          .contains("*** source.dependencies: [my.custom:annotations:1.5.3, com.google.code.findbugs:jsr305:3.0.2]")
           .contains("BUILD SUCCESSFUL");
       }
     }
@@ -135,7 +135,7 @@ import testing.annotations.TestkitTest;
 
         assertThat(result.getOutput())
           .contains("*** packageInfo.annotations: [my.custom.annotation.NullApi, my.custom.annotation.NullFields]")
-          .contains("*** source.dependencies: [my.custom:annotations:1.5.3, com.google.code.findbugs:jsr305:+]")
+          .contains("*** source.dependencies: [my.custom:annotations:1.5.3, com.google.code.findbugs:jsr305:3.0.2]")
           .contains("BUILD SUCCESSFUL");
       }
     }

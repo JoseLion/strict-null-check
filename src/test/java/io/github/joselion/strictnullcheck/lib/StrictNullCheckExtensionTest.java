@@ -93,7 +93,7 @@ import testing.annotations.UnitTest;
 
         final var dependencies = extension.getSource().getDependencies().get();
 
-        assertThat(dependencies).contains("com.google.code.findbugs:jsr305:+");
+        assertThat(dependencies).contains("com.google.code.findbugs:jsr305:3.0.2");
       }
     }
 
@@ -106,7 +106,7 @@ import testing.annotations.UnitTest;
 
         final var dependencies = extension.getSource().getDependencies().get();
 
-        assertThat(dependencies).contains("com.github.spotbugs:spotbugs-annotations:+");
+        assertThat(dependencies).contains("com.github.spotbugs:spotbugs-annotations:4.7.3");
       }
     }
 
@@ -119,7 +119,7 @@ import testing.annotations.UnitTest;
 
         final var dependencies = extension.getSource().getDependencies().get();
 
-        assertThat(dependencies).contains("org.eclipse.jdt:org.eclipse.jdt.annotation:+");
+        assertThat(dependencies).contains("org.eclipse.jdt:org.eclipse.jdt.annotation:2.2.700");
       }
     }
   }
