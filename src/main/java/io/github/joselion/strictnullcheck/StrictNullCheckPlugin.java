@@ -1,9 +1,11 @@
 package io.github.joselion.strictnullcheck;
 
+import static org.gradle.api.plugins.JavaPlugin.COMPILE_JAVA_TASK_NAME;
+import static org.gradle.api.tasks.SourceSet.MAIN_SOURCE_SET_NAME;
+
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.plugins.JavaPlugin;
-import org.gradle.api.tasks.SourceSet;
 import org.gradle.api.tasks.SourceSetContainer;
 
 import io.github.joselion.strictnullcheck.lib.GeneratePackageInfoTask;
@@ -21,7 +23,7 @@ public class StrictNullCheckPlugin implements Plugin<Project> {
         .register("generatePackageInfo", GeneratePackageInfoTask.class);
 
       project.getTasks().getByName(
-        JavaPlugin.COMPILE_JAVA_TASK_NAME,
+        COMPILE_JAVA_TASK_NAME,
         task -> task.dependsOn(generateTask.get())
       );
 
@@ -34,7 +36,7 @@ public class StrictNullCheckPlugin implements Plugin<Project> {
       project
         .getExtensions()
         .getByType(SourceSetContainer.class)
-        .getByName(SourceSet.MAIN_SOURCE_SET_NAME, sourceSet ->
+        .getByName(MAIN_SOURCE_SET_NAME, sourceSet ->
           sourceSet
             .getJava()
             .srcDir(extension.getGeneratedDir().get().concat("/java/main"))

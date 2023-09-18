@@ -37,11 +37,11 @@ dependencyLocking {
 }
 
 checkstyle {
-  setToolVersion('10.12.3')
+  setToolVersion(libs.versions.checkstyle.get())
 }
 
 sonarLint {
-  setToolVersion('9.2.0.74516')
+  setToolVersion(libs.versions.sonarlint.core.get())
   languages {
     include('java')
   }
@@ -67,30 +67,30 @@ repositories {
 }
 
 dependencies {
-  annotationProcessor('org.projectlombok:lombok:1.18.28')
-  compileOnly('org.projectlombok:lombok:1.18.28')
-  sonarlintCorePlugins('org.sonarsource.java:sonar-java-plugin:7.24.0.32100')
+  annotationProcessor(libs.lombok)
+  compileOnly(libs.lombok)
+  sonarlintCorePlugins(libs.sonarlint.java)
   constraints {
-    sonarlintCore('org.apache.tomcat.embed:tomcat-embed-core:9.0.80') {
+    sonarlintCore(libs.tomcat.jasper) {
       because('version 9.0.75 has a security vulnerability')
     }
   }
 
   implementation(localGroovy())
-  implementation('io.github.joselion:maybe:3.2.0')
+  implementation(libs.maybe)
 }
 
 testing {
   suites {
     configureEach {
-      useJUnitJupiter('5.10.0')
+      useJUnitJupiter(libs.versions.junit.get())
 
       dependencies {
-        annotationProcessor('org.projectlombok:lombok:1.18.28')
-        compileOnly('org.projectlombok:lombok:1.18.28')
+        annotationProcessor(libs.lombok)
+        compileOnly(libs.lombok)
 
-        implementation('org.assertj:assertj-core:3.24.2')
-        implementation('org.mockito:mockito-core:5.5.0')
+        implementation(libs.assertj)
+        implementation(libs.mockito)
       }
     }
 
