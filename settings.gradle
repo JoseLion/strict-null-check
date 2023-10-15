@@ -12,7 +12,7 @@ dependencyResolutionManagement {
       library('maybe', 'io.github.joselion', 'maybe').version('3.3.1')
       library('mockito', 'org.mockito', 'mockito-core').version('5.5.0')
       library('sonarlint-java', 'org.sonarsource.java', 'sonar-java-plugin').version('7.24.0.32100')
-      library('tomcat-jasper', 'org.apache.tomcat.embed', 'tomcat-embed-jasper').version('9.0.80')
+      library('tomcat-jasper', 'org.apache.tomcat.embed', 'tomcat-embed-jasper').version('9.0.81')
     }
   }
 }
