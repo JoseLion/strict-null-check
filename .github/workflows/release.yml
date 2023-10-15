@@ -28,7 +28,7 @@ jobs:
           distribution: oracle
           java-version: 20
           check-latest: true
-          cache: gradle
+      - uses: gradle/gradle-build-action@v2
       - uses: actions/setup-node@v3
         with:
           node-version-file: .nvmrc

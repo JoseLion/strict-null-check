@@ -28,7 +28,7 @@ jobs:
           distribution: oracle
           java-version: 20
           check-latest: true
-          cache: gradle
+      - uses: gradle/gradle-build-action@v2
       - uses: github/codeql-action/init@v2
         with:
           languages: java-kotlin
