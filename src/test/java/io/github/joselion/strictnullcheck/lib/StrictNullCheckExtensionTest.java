@@ -19,13 +19,11 @@ import testing.annotations.UnitTest;
       final var imports = extension.getPackageInfo().getImports().get();
       final var annotations = extension.getPackageInfo().getAnnotations().get();
       final var javadoc = extension.getPackageInfo().getJavadoc().get();
-      final var dependencies = extension.getSource().getDependencies().get();
 
       assertThat(imports).containsExactly("javax.annotation.ParametersAreNonnullByDefault");
       assertThat(annotations).containsExactly("@ParametersAreNonnullByDefault");
       assertThat(generatedDir).isEqualTo(buildDir.concat("/generated/sources/strictNullCheck"));
       assertThat(javadoc).isEmpty();
-      assertThat(dependencies).isEmpty();
     }
   }
 
@@ -79,47 +77,6 @@ import testing.annotations.UnitTest;
           })\
           """
         );
-      }
-    }
-  }
-
-  @Nested class source {
-    @Nested class addFindBugs {
-      @Test void adds_the_FindBugs_dependency() {
-        final var project = ProjectBuilder.builder().build();
-        final var extension = project.getExtensions().create("strictNullCheck", StrictNullCheckExtension.class);
-
-        extension.getSource().addFindBugs();
-
-        final var dependencies = extension.getSource().getDependencies().get();
-
-        assertThat(dependencies).contains("com.google.code.findbugs:jsr305:3.0.2");
-      }
-    }
-
-    @Nested class addSpotBugs {
-      @Test void adds_the_SpotBugs_dependency() {
-        final var project = ProjectBuilder.builder().build();
-        final var extension = project.getExtensions().create("strictNullCheck", StrictNullCheckExtension.class);
-
-        extension.getSource().addSpotBugs();
-
-        final var dependencies = extension.getSource().getDependencies().get();
-
-        assertThat(dependencies).contains("com.github.spotbugs:spotbugs-annotations:4.7.3");
-      }
-    }
-
-    @Nested class addEclipse {
-      @Test void adds_the_SpotBugs_dependency() {
-        final var project = ProjectBuilder.builder().build();
-        final var extension = project.getExtensions().create("strictNullCheck", StrictNullCheckExtension.class);
-
-        extension.getSource().addEclipse();
-
-        final var dependencies = extension.getSource().getDependencies().get();
-
-        assertThat(dependencies).contains("org.eclipse.jdt:org.eclipse.jdt.annotation:2.2.700");
       }
     }
   }

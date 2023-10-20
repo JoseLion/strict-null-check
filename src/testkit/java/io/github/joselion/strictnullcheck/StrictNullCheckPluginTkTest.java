@@ -24,9 +24,7 @@ import testing.annotations.TestkitTest;
         }
 
         strictNullCheck {
-          source {
-            addFindBugs()
-          }
+          addFindBugs()
         }
 
         repositories {
@@ -70,8 +68,7 @@ import testing.annotations.TestkitTest;
               'my.custom.annotation.NullApi',
               'my.custom.annotation.NullFields',
             ]
-            source.dependencies = ['my.custom:annotations:1.5.3']
-            source.addFindBugs()
+            addFindBugs()
           }
 
           repositories {
@@ -80,8 +77,9 @@ import testing.annotations.TestkitTest;
 
           task showConfig() {
             doLast {
+              def deps = configurations.compileOnly.dependencies.collect { "$it.group:$it.name:$it.version" }
               println("*** packageInfo.annotations: ${strictNullCheck.packageInfo.annotations.get()}")
-              println("*** source.dependencies: ${strictNullCheck.source.dependencies.get()}")
+              println("*** dependencies: $deps")
             }
           }
           """
@@ -91,7 +89,7 @@ import testing.annotations.TestkitTest;
 
         assertThat(result.getOutput())
           .contains("*** packageInfo.annotations: [my.custom.annotation.NullApi, my.custom.annotation.NullFields]")
-          .contains("*** source.dependencies: [my.custom:annotations:1.5.3, com.google.code.findbugs:jsr305:3.0.2]")
+          .contains("*** dependencies: [com.google.code.findbugs:jsr305:3.0.2]")
           .contains("BUILD SUCCESSFUL");
       }
     }
@@ -112,10 +110,7 @@ import testing.annotations.TestkitTest;
                 'my.custom.annotation.NullFields',
               ]
             }
-            source {
-              dependencies = ['my.custom:annotations:1.5.3']
-              addFindBugs()
-            }
+            addFindBugs()
           }
 
           repositories {
@@ -124,8 +119,9 @@ import testing.annotations.TestkitTest;
 
           task showConfig() {
             doLast {
+              def deps = configurations.compileOnly.dependencies.collect { "$it.group:$it.name:$it.version" }
               println("*** packageInfo.annotations: ${strictNullCheck.packageInfo.annotations.get()}")
-              println("*** source.dependencies: ${strictNullCheck.source.dependencies.get()}")
+              println("*** dependencies: $deps")
             }
           }
           """
@@ -135,7 +131,7 @@ import testing.annotations.TestkitTest;
 
         assertThat(result.getOutput())
           .contains("*** packageInfo.annotations: [my.custom.annotation.NullApi, my.custom.annotation.NullFields]")
-          .contains("*** source.dependencies: [my.custom:annotations:1.5.3, com.google.code.findbugs:jsr305:3.0.2]")
+          .contains("*** dependencies: [com.google.code.findbugs:jsr305:3.0.2]")
           .contains("BUILD SUCCESSFUL");
       }
     }
