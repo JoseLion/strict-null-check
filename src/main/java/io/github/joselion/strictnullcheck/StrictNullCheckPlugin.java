@@ -42,24 +42,5 @@ public class StrictNullCheckPlugin implements Plugin<Project> {
             .srcDir(extension.getGeneratedDir().get().concat("/java/main"))
         );
     });
-
-    project.afterEvaluate(evaluated -> {
-      final var allCompileOnly = evaluated
-        .getConfigurations()
-        .matching(configuration -> {
-          final var name = configuration.getName();
-          return name.startsWith("compileOnly") || name.endsWith("CompileOnly");
-        });
-
-      allCompileOnly.configureEach(configuration ->
-        extension
-          .getSource()
-          .getDependencies()
-          .get()
-          .stream()
-          .map(evaluated.getDependencies()::create)
-          .forEach(configuration.getDependencies()::add)
-      );
-    });
   }
 }

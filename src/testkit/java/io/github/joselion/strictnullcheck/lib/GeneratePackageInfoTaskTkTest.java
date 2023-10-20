@@ -26,9 +26,7 @@ import testing.annotations.TestkitTest;
         }
 
         strictNullCheck {
-          source {
-            addFindBugs()
-          }
+          addFindBugs()
         }
 
         repositories {
