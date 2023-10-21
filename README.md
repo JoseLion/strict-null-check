@@ -59,11 +59,9 @@ The default extension configuration only adds the `javax.annotation.ParametersAr
 
 ```groovy
 strictNullCheck {
+  addEclipse()
   packageInfo {
     useEclipse()
-  }
-  source {
-    addEclipse()
   }
 }
 ```
@@ -72,51 +70,48 @@ Eclise's annotation are recommended because they have the most applicable locati
 
 ```groovy
 strictNullCheck {
+  addFindBugs()
+  // addSpotBugs()
   packageInfo {
     useSpring()
-  }
-  source {
-    addFindBugs()
-    // addSpotBugs()
   }
 }
 ```
 
 ### Custom annotation
 
-If none of the shorcut function work for you, you can always customize the generation as needed:
+If none of the shorcut function work for you, you can always customize the generation as needed. You'll need to add the your custom annotation as a dependency as usual:
 
 ```groovy
 strictNullCheck {
+  addSpotBugs()
   generatedDir = "$buildDir/custom/classpath/dir"
   packageInfo {
     imports = ['my.custom.annotation.NonNullByDefault']
     annotation = ['@NonNullByDefault']
     javadoc = "@since v1.0.0"
   }
-  source {
-    dependencies = ['my.custome.annotation:jsr-305:1.3.8']
-    addSpotBugs()
-  }
+}
+
+dependencies {
+  compileOnly('my.custome.annotation:jsr-305:1.3.8')
 }
 ```
 
 ### Extension API
 
-| Property                    | Default                                            | Description |
-| --------------------------- | :------------------------------------------------: | ----------- |
-| generatedDir                | "$buildDir/generated/sources/strictNullCheck"      | The directory where the classpath of the `package-info.java` files will be generated |
-| packageInfo                 | -                                                  | Container to configure package-info related setting |
-| packageInfo.imports         | ['javax.annotation.ParametersAreNonnullByDefault'] | List of fully qualified imports to be added to the `package-info.java` files. Static imports can be added using `static ` as prefix |
-| packageInfo.annotations     | ['@ParametersAreNonnullByDefault']                 | List of java code annotations to be added to the `package-info.java` files |
-| packageInfo.javadoc         | ''                                                 | Additional text to be added to the javadoc of the `package-info.java` files |
-| packageInfo.useSpring()     | -                                                  | Shorcut function to set Spring's imports and annotations |
-| packageInfo.useEclipse()    | -                                                  | Shorcut function to set Eclipse's imports and annotations |
-| source                      | -                                                  | Container to configure the source of the annotations/imports |
-| source.dependencies         | []                                                 | List of short-style dependencies to be added to all _compileOnly_ classpaths |
-| source.addFindBugs(version) | version = `3.0.2`                                  | Shortcut function to add `com.google.code.findbugs:jsr305` dependency |
-| source.addSpotBugs(version) | version = `4.7.3`                                  | Shortcut function to add `com.github.spotbugs:spotbugs-annotations` dependency |
-| source.addEclipse(version)  | version = `2.2.700`                                | Shortcut function to add `org.eclipse.jdt:org.eclipse.jdt.annotation` dependency |
+| Property                 | Default                                              | Description |
+| ------------------------ | ---------------------------------------------------- | ----------- |
+| generatedDir             | `"$buildDir/generated/sources/strictNullCheck"`      | The directory where the classpath of the `package-info.java` files will be generated |
+| addEclipse(version)      | version = `2.2.700`                                  | Shortcut function to add `org.eclipse.jdt:org.eclipse.jdt.annotation` as a **compileOnly** dependency |
+| addFindBugs(version)     | version = `3.0.2`                                    | Shortcut function to add `com.google.code.findbugs:jsr305` as a **compileOnly** dependency |
+| addSpotBugs(version)     | version = `4.7.3`                                    | Shortcut function to add `com.github.spotbugs:spotbugs-annotations` as a **compileOnly** dependency |
+| packageInfo              | -                                                    | Container to configure package-info related setting |
+| packageInfo.imports      | `['javax.annotation.ParametersAreNonnullByDefault']` | List of fully qualified imports to be added to the `package-info.java` files. Static imports can be added using `static ` as prefix |
+| packageInfo.annotations  | `['@ParametersAreNonnullByDefault']`                 | List of java code annotations to be added to the `package-info.java` files |
+| packageInfo.javadoc      | `''`                                                 | Additional text to be added to the javadoc of the `package-info.java` files |
+| packageInfo.useSpring()  | -                                                    | Shorcut function to set Spring's imports and annotations |
+| packageInfo.useEclipse() | -                                                    | Shorcut function to set Eclipse's imports and annotations |
 
 ### Overriding package-info.java
 
