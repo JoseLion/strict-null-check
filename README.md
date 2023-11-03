@@ -1,4 +1,5 @@
 [![CI](https://github.com/JoseLion/strict-null-check/actions/workflows/ci.yml/badge.svg)](https://github.com/JoseLion/strict-null-check/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/JoseLion/strict-null-check/actions/workflows/codeql.yml/badge.svg)](https://github.com/JoseLion/strict-null-check/actions/workflows/codeql.yml)
 [![Release](https://github.com/JoseLion/strict-null-check/actions/workflows/release.yml/badge.svg)](https://github.com/JoseLion/strict-null-check/actions/workflows/release.yml)
 [![Pages](https://github.com/JoseLion/strict-null-check/actions/workflows/pages.yml/badge.svg)](https://github.com/JoseLion/strict-null-check/actions/workflows/pages.yml)
 [![Gradle Plugin](https://img.shields.io/gradle-plugin-portal/v/io.github.joselion.strict-null-check?logo=gradle)](https://plugins.gradle.org/plugin/io.github.joselion.strict-null-check)
