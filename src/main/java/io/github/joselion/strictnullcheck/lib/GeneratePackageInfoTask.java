@@ -50,13 +50,13 @@ public class GeneratePackageInfoTask extends DefaultTask {
       .flatMap(sourceSet -> sourceSet.getAllJava().getSrcDirs().stream())
       .map(File::toPath)
       .filter(path -> !path.startsWith(getGeneratedDir().getPath()))
-      .flatMap(path -> Maybe.just(path).resolve(Files::walk).orElseGet(Stream::empty))
+      .flatMap(path -> Maybe.of(path).solve(Files::walk).orElseGet(Stream::empty))
       .filter(subdir -> Files.notExists(subdir.resolve("package-info.java")))
-      .flatMap(subdir -> Maybe.just(subdir).resolve(Files::list).orElseGet(Stream::empty))
+      .flatMap(subdir -> Maybe.of(subdir).solve(Files::list).orElseGet(Stream::empty))
       .filter(path -> FileSystems.getDefault().getPathMatcher("glob:*.java").matches(path.getFileName()))
       .map(path ->
-        Maybe.just(path)
-          .resolve(Files::readString)
+        Maybe.of(path)
+          .solve(Files::readString)
           .map(Pattern.compile("^package (.+);")::matcher)
           .orThrow(RuntimeException::new)
       )
@@ -88,9 +88,9 @@ public class GeneratePackageInfoTask extends DefaultTask {
     final var templateOutput = getPackageInfoTemplate(packageName);
     final var outputFile = new File(dir.getAbsolutePath(), "package-info.java");
 
-    Maybe.just(outputFile)
-      .resolve(File::createNewFile)
-      .runEffect(wasCreated -> {
+    Maybe.of(outputFile)
+      .solve(File::createNewFile)
+      .effect(wasCreated -> {
         if (wasCreated.booleanValue()) {
           Files.writeString(outputFile.toPath(), templateOutput);
         }
