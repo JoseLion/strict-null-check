@@ -17,7 +17,7 @@ plugins {
 group = 'io.github.joselion'
 
 java {
-  sourceCompatibility = JavaLanguageVersion.of(20)
+  sourceCompatibility = JavaLanguageVersion.of(21)
   toolchain {
     languageVersion = JavaLanguageVersion.of(21)
     vendor = JvmVendorSpec.ORACLE
@@ -61,6 +61,13 @@ sonarLint {
 strictNullCheck {
   addEclipse()
   packageInfo.useEclipse()
+}
+
+// Workaround for: https://github.com/checkstyle/checkstyle/issues/14211
+configurations.checkstyle {
+  resolutionStrategy.capabilitiesResolution.withCapability("com.google.collections:google-collections") {
+    select("com.google.guava:guava:0")
+  }
 }
 
 repositories {
