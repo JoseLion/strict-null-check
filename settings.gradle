@@ -14,7 +14,7 @@ dependencyResolutionManagement {
       plugin('pluginPublish', 'com.gradle.plugin-publish').version('1.2.1')
       plugin('prettyJupiter', 'io.github.joselion.pretty-jupiter').version('3.2.0')
       plugin('sonarlint', 'name.remal.sonarlint').version('3.4.4')
-      plugin('strictNullCheck', 'io.github.joselion.strict-null-check').version('3.2.0')
+      plugin('strictNullCheck', 'io.github.joselion.strict-null-check').version('3.3.0')
 
       library('assertj', 'org.assertj', 'assertj-core').version('3.25.1')
       library('lombok', 'org.projectlombok', 'lombok').version('1.18.30')
