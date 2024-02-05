@@ -49,7 +49,7 @@ public class GeneratePackageInfoTask extends DefaultTask {
       .stream()
       .flatMap(sourceSet -> sourceSet.getAllJava().getSrcDirs().stream())
       .map(File::toPath)
-      .filter(path -> !path.startsWith(getGeneratedDir().getPath()))
+      .filter(path -> !path.startsWith(this.getGeneratedDir().getPath()))
       .flatMap(path -> Maybe.of(path).solve(Files::walk).orElseGet(Stream::empty))
       .filter(subdir -> Files.notExists(subdir.resolve("package-info.java")))
       .flatMap(subdir -> Maybe.of(subdir).solve(Files::list).orElseGet(Stream::empty))
@@ -85,7 +85,7 @@ public class GeneratePackageInfoTask extends DefaultTask {
     final var basePath = this.getGeneratedDir().getPath();
     final var dashedPath = packageName.replace(".", "/");
     final var dir = this.project.mkdir(basePath.concat("/java/main/").concat(dashedPath));
-    final var templateOutput = getPackageInfoTemplate(packageName);
+    final var templateOutput = this.getPackageInfoTemplate(packageName);
     final var outputFile = new File(dir.getAbsolutePath(), "package-info.java");
 
     Maybe.of(outputFile)
@@ -96,7 +96,7 @@ public class GeneratePackageInfoTask extends DefaultTask {
         }
       })
       .orThrow(exception -> {
-        project.getLogger().error(
+        this.project.getLogger().error(
           "Unable to generate package-info.java at [%s]".formatted(outputFile),
           exception
         );

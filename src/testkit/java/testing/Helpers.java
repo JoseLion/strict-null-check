@@ -7,13 +7,17 @@ import java.nio.file.Path;
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.GradleRunner;
 
-public class Helpers {
+public final class Helpers {
 
   public static final Path PROJECT_PATH = Path.of("build/testkit");
 
   public static final Path SRC_PATH = PROJECT_PATH.resolve("src/main/java/com/example/app");
 
   public static final Path TEST_PATH = PROJECT_PATH.resolve("src/test/java/com/example/app");
+
+  private Helpers() {
+    throw new UnsupportedOperationException("Helpers is a helper class");
+  }
 
   public static void writeBuildGradle(final String text) {
     try {
