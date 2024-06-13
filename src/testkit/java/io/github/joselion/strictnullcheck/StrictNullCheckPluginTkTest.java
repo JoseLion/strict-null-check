@@ -3,8 +3,6 @@ package io.github.joselion.strictnullcheck;
 import static org.assertj.core.api.Assertions.assertThat;
 import static testing.Helpers.PROJECT_PATH;
 
-import java.io.IOException;
-
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +12,7 @@ import testing.annotations.TestkitTest;
 @TestkitTest class StrictNullCheckPluginTkTest {
 
   @Nested class when_the_plugin_is_applied {
-    @Test void generates_package_info_files_before_compileJava_task() throws IOException {
+    @Test void generates_package_info_files_before_compileJava_task() {
       final var packageInfo = "build/generated/sources/strictNullCheck/java/main/com/example/app/package-info.java";
       Helpers.writeBuildGradle(
         """
