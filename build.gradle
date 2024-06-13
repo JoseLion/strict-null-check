@@ -17,9 +17,9 @@ plugins {
 group = 'io.github.joselion'
 
 java {
-  sourceCompatibility = JavaLanguageVersion.of(21)
+  sourceCompatibility = JavaLanguageVersion.of(22)
   toolchain {
-    languageVersion = JavaLanguageVersion.of(21)
+    languageVersion = JavaLanguageVersion.of(22)
     vendor = JvmVendorSpec.ORACLE
   }
 }
@@ -42,7 +42,6 @@ checkstyle {
 }
 
 sonarLint {
-  setToolVersion(libs.versions.sonarlint.core.get())
   languages {
     include('java')
   }
@@ -61,13 +60,6 @@ sonarLint {
 strictNullCheck {
   addEclipse()
   packageInfo.useEclipse()
-}
-
-// Workaround for: https://github.com/checkstyle/checkstyle/issues/14211
-configurations.checkstyle {
-  resolutionStrategy.capabilitiesResolution.withCapability("com.google.collections:google-collections") {
-    select("com.google.guava:guava:0")
-  }
 }
 
 repositories {
@@ -123,8 +115,8 @@ prettyJupiter {
 }
 
 gradlePlugin {
-  website = 'https://github.com/JoseLion/strict-null-check'
-  vcsUrl = 'https://github.com/JoseLion/strict-null-check'
+  website = 'https://joselion.github.io/strict-null-check/'
+  vcsUrl = 'https://github.com/joselion/strict-null-check'
 
   plugins {
     strictNullCheck {
