@@ -38,6 +38,7 @@ dependencyLocking {
 }
 
 checkstyle {
+  setMaxWarnings(0)
   setToolVersion(libs.versions.checkstyle.get())
 }
 
